@@ -1,6 +1,6 @@
 /*
 	@file	Direct3D11.h
-	@date	2018/02/11
+	@date	2018/11/10
 	@author	番場 宥輝
 	@brief	Direct3D11デバイス
 	@detail	シングルトン
@@ -25,44 +25,48 @@
 const INT WINDOW_WIDTH	= 1920;
 const INT WINDOW_HEIGHT = 1080;
 
-/*!
-	@brief	Direct3D11デバイスclass
-*/
-class Direct3D11
-{
-public:
-	~Direct3D11();
-	static Direct3D11& GetInstance() {
-		static Direct3D11 instance;
-		return instance;
-	}
+namespace D3D11 {
 
-	/*! 関数 */
-	bool Initialize(HWND hWnd);
-	void Release();
-	void Clear();
-	void Present();
-	void ReportCOMs(std::string firstMessage = "");
+	/*!
+		@brief	Direct3D11デバイスclass
+	*/
+	class Direct3D11
+	{
+	public:
+		~Direct3D11();
+		static Direct3D11& GetInstance() {
+			static Direct3D11 instance;
+			return instance;
+		}
 
-	/*! ゲッター */
-	ID3D11Device* GetDevice()const { return m_pDevice.Get(); }
-	ID3D11DeviceContext* GetDeviceContext()const { return m_pDeviceContext.Get(); }
-private:
-	Direct3D11();
-	void operator=(const Direct3D11& instance)	= delete;	/*!< 代入禁止 */
-	Direct3D11(const Direct3D11& instance)		= delete;	/*!< コピー禁止 */
+		/*! 関数 */
+		bool Initialize(HWND hWnd);
+		void Release();
+		void Clear();
+		void Present();
+		void ReportCOMs(std::string firstMessage = "");
 
-	/*! 定数 */ 
-	static const float c_ClearColor[4];
+		/*! ゲッター */
+		ID3D11Device* GetDevice()const { return m_pDevice.Get(); }
+		ID3D11DeviceContext* GetDeviceContext()const { return m_pDeviceContext.Get(); }
+	private:
+		Direct3D11();
+		void operator=(const Direct3D11& instance) = delete;	/*!< 代入禁止 */
+		Direct3D11(const Direct3D11& instance) = delete;	/*!< コピー禁止 */
 
-	/*! 変数 */
-	Microsoft::WRL::ComPtr<ID3D11Device>			m_pDevice;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext>		m_pDeviceContext;
-	Microsoft::WRL::ComPtr<IDXGISwapChain>			m_pSwapChain;
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>	m_pRenderTargetView;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>	m_pDepthStencilView;
-	Microsoft::WRL::ComPtr<ID3D11Texture2D>			m_pDepthStencil;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState>	m_pDepthStencilState;
-	Microsoft::WRL::ComPtr<ID3D11RasterizerState>	m_pRasterizerState;
-	Microsoft::WRL::ComPtr<ID3D11Debug>				m_pDebug;
+		/*! 定数 */
+		static const float c_ClearColor[4];
+
+		/*! 変数 */
+		Microsoft::WRL::ComPtr<ID3D11Device>			m_pDevice;
+		Microsoft::WRL::ComPtr<ID3D11DeviceContext>		m_pDeviceContext;
+		Microsoft::WRL::ComPtr<IDXGISwapChain>			m_pSwapChain;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView>	m_pRenderTargetView;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilView>	m_pDepthStencilView;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D>			m_pDepthStencil;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState>	m_pDepthStencilState;
+		Microsoft::WRL::ComPtr<ID3D11RasterizerState>	m_pRasterizerState;
+		Microsoft::WRL::ComPtr<ID3D11Debug>				m_pDebug;
+	};
 };
+

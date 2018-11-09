@@ -1,6 +1,6 @@
 /*!
 	@file	MAIN.cpp
-	@date	2018/02/08
+	@date	2018/11/10
 	@author	番場 宥輝
 	@brief	アプリケーションメインエントリーポイント
 */
@@ -18,6 +18,7 @@
 	@brief	名前空間
 */
 using namespace std;
+using namespace D3D11;
 
 /*!
 	@def	定数

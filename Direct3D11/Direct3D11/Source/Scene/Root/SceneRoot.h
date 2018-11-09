@@ -7,7 +7,6 @@
 #pragma once
 #include "../Scene.h"
 
-
 class SceneRoot final:
 	public ISceneBase
 {
@@ -15,10 +14,10 @@ public:
 	SceneRoot();
 	~SceneRoot();
 
-	void		Initialize();
-	ISceneBase*	Update(ISceneBase* scene);
-	void		Render();
-	void		Finalize();
+	void		Initialize()override;
+	ISceneBase*	Update(ISceneBase* scene)override;
+	void		Render()override;
+	void		Finalize()override;
 private:
 	Scene*		m_pScene;
 };

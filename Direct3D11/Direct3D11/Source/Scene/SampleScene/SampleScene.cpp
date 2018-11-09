@@ -1,12 +1,27 @@
+/*
+	@file	SampleScene.cpp
+	@date	2018/11/06
+	@author	番場 宥輝
+	@brief	サンプルシーン
+*/
 #include "SampleScene.h"
 
+/*!
+	@brief	名前空間
+	@detail	usingディレクティブ
+*/
 using namespace std;
 
+/*!
+	@brief	コンストラクタ
+*/
 SampleScene::SampleScene()
 {
 }
 
-
+/*!
+	@brief	デストラクタ
+*/
 SampleScene::~SampleScene()
 {
 	Finalize();

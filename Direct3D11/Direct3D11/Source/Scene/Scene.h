@@ -16,6 +16,6 @@ class Scene :
 public:
 	virtual			~Scene();
 
-	ISceneBase*		Update(ISceneBase* scene)final;
+	ISceneBase*		Update(ISceneBase* scene)override final;
 	virtual Scene*	Update(SceneRoot* root) = 0;
 };

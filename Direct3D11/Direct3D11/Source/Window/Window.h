@@ -1,3 +1,9 @@
+/*!
+	@file	Window.h
+	@date	2018/02/22
+	@author	番場 宥輝
+	@brief	WindowsAPIのウィンドウ生成
+*/
 #pragma once
 #include <Windows.h>
 

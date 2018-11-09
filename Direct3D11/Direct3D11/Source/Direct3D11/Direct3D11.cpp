@@ -1,6 +1,6 @@
 /*
-	@file	Direct3D11.h
-	@date	2018/02/11
+	@file	Direct3D11.cpp
+	@date	2018/11/10
 	@author	番場 宥輝
 	@brief	Direct3D11デバイス
 	@detail	シングルトン
@@ -17,6 +17,13 @@
 	@brief	マルチサンプル・アンチエイリアス(コメントアウトするとMSAA無し)
 */
 //#define MSAA
+
+
+/*!
+	@brief	usingディレクティブ
+	@using	D3D11
+*/
+using namespace D3D11;
 
 /*!
 	@def	定数

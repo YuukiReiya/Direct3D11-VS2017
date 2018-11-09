@@ -1,3 +1,9 @@
+/*!
+	@file	Window.cpp
+	@date	2018/02/22
+	@author	番場 宥輝
+	@brief	WindowsAPIのウィンドウ生成
+*/
 #include "Window.h"
 #include "../MemoryLeaks.h"
 

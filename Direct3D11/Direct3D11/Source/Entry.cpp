@@ -31,16 +31,21 @@ INT WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, INT)
 #endif // _UNICODE
 
 
+	/*! インスタンスの生成 */
 	g_pMain = new Main;
 	if (!g_pMain) {
 		return 0;
 	}
+
+	/*! 高解像度タイマーへ対応を調べ、未対応ならプログラムを終了させる */
 	if (!g_pMain->HighQualityTimmer()) {
 		g_pMain->Release();
 		delete(g_pMain);
 		g_pMain = nullptr;
 		return 0;
 	}
+
+	/*! アプリケーションの初期化をし、メインループへ */
 	if (g_pMain->Initialize(hInstance)) {
 		g_pMain->Loop();
 	}
