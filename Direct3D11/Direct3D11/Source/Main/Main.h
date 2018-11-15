@@ -5,7 +5,7 @@
 	@brief	アプリケーションメインエントリーポイント
 */
 #ifdef _DEBUG
-#define DrawFPS//FPSを表示
+#define DEBUG_FPS//FPSを表示
 #endif // _DEBUG
 #pragma once
 #include <Windows.h>

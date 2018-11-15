@@ -7,6 +7,7 @@
 */
 #pragma once
 #include <DirectXMath.h>
+#include "../Singleton/Singleton.h"
 
 /****************************************/
 /*			ƒJƒƒ‰‚Ì•`‰æˆæ(v)			*/
@@ -23,6 +24,7 @@
 
 
 class Camera
+	:public Singleton<Camera>
 {
 public:
 	~Camera();
@@ -59,8 +61,6 @@ public:
 
 private:
 	Camera();
-	void operator=(const Camera& instance)	= delete;	/*!< ‘ã“ü‹Ö~ */
-	Camera(const Camera& instance)			= delete;	/*!< ƒRƒs[‹Ö~ */
 
 	/*! •Ï” */
 	float m_FieldOfView;

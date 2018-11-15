@@ -12,6 +12,7 @@
 #include <D3D11.h>
 #include <string>
 #include <wrl/client.h>
+#include "../Singleton/Singleton.h"
 
 /*!
 	@def	Vsync
@@ -25,12 +26,14 @@
 const INT WINDOW_WIDTH	= 1920;
 const INT WINDOW_HEIGHT = 1080;
 
+/*! Direct3D11関連の名前空間 */
 namespace D3D11 {
 
 	/*!
 		@brief	Direct3D11デバイスclass
 	*/
 	class Direct3D11
+		:public Singleton<Direct3D11>
 	{
 	public:
 		~Direct3D11();
@@ -51,8 +54,6 @@ namespace D3D11 {
 		ID3D11DeviceContext* GetDeviceContext()const { return m_pDeviceContext.Get(); }
 	private:
 		Direct3D11();
-		void operator=(const Direct3D11& instance) = delete;	/*!< 代入禁止 */
-		Direct3D11(const Direct3D11& instance) = delete;	/*!< コピー禁止 */
 
 		/*! 定数 */
 		static const float c_ClearColor[4];

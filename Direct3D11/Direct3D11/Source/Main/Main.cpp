@@ -63,7 +63,6 @@ bool Main::Initialize(HINSTANCE hInstance)
 	/*! Direct3Dデバイスの初期化 */
 	if (!Direct3D11::GetInstance().Initialize(m_hWnd)) { return false; }
 
-	
 	/*! 初期化完了 */
 	return true;
 }
@@ -163,7 +162,7 @@ bool Main::HighQualityTimmer()
 void Main::App()
 {
 	/*! FPS確認 */
-#ifdef DrawFPS
+#ifdef DEBUG_FPS
 	static DWORD time = 0;
 	static int frame = 0;
 	frame++;
