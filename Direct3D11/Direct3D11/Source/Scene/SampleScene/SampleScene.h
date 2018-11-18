@@ -7,6 +7,8 @@
 #pragma once
 #include <memory>
 #include "../Scene.h"
+#include "../../Renderer/Sprite/Sprite.h"
+#include "../../Renderer/Texture/Texture.h"
 
 class SampleScene final
 	: public Scene
@@ -21,9 +23,9 @@ public:
 	void Render()override;
 
 private:
-	//std::unique_ptr<Texture>m_pTex;
-	//std::unique_ptr<Sprite>m_pSprite;
-	//std::unique_ptr<Texture>m_pTex2;
-	//std::unique_ptr<Sprite>m_pSprite2;
+	std::unique_ptr<API::Texture>m_pTex;
+	std::unique_ptr<API::Sprite>m_pSprite;
+	std::unique_ptr<API::Texture>m_pTex2;
+	std::unique_ptr<API::Sprite>m_pSprite2;
 };
 

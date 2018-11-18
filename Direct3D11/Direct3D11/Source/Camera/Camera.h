@@ -28,10 +28,10 @@ class Camera
 {
 public:
 	~Camera();
-	static Camera& GetInstance() {
-		static Camera instance;
-		return instance;
-	}
+	//static Camera& GetInstance() {
+	//	static Camera instance;
+	//	return instance;
+	//}
 
 
 	void Initialize(
@@ -61,6 +61,7 @@ public:
 
 private:
 	Camera();
+	friend class Singleton<Camera>;
 
 	/*! •Ï” */
 	float m_FieldOfView;

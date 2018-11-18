@@ -5,12 +5,14 @@
 	@brief	サンプルシーン
 */
 #include "SampleScene.h"
-
+#include "../../Shader/ShaderManager.h"
 /*!
 	@brief	名前空間
 	@detail	usingディレクティブ
 */
 using namespace std;
+using namespace D3D11;
+using namespace API;
 
 /*!
 	@brief	コンストラクタ
@@ -37,9 +39,18 @@ void SampleScene::Initialize()
 	//m_pTex2 = make_unique<Texture>();
 	//m_pSprite2 = make_unique<Sprite>();
 
-	//m_pTex->Load("image.jpg", { 308 ,163});
-	//m_pTex2->Load("Smoke.png", { 256,256 });
-	//m_pSprite->Initialize();
+
+	m_pTex = make_unique<Texture>();
+	m_pSprite = make_unique<Sprite>();
+
+	m_pTex2 = make_unique<Texture>();
+	m_pSprite2 = make_unique<Sprite>();
+
+
+	m_pTex->Load("image.jpg", { 308,163 });
+	m_pSprite->Initialize();
+	m_pTex2->Load("test.png", { 256,256 });
+	m_pSprite2->Initialize();
 }
 
 /*!
@@ -64,6 +75,6 @@ Scene * SampleScene::Update(SceneRoot * root)
 */
 void SampleScene::Render()
 {
-	//m_pSprite->Render(m_pTex.get());
-	//m_pSprite2->Render(m_pTex2.get());
+	m_pSprite->Render(m_pTex2.get());
+	m_pSprite->Render(m_pTex.get());
 }

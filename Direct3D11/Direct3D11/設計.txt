@@ -1,0 +1,11 @@
+namespace API
+・Sprite
+・Texture
+・Wave
+
+namespace D3D11
+・Direct3D11
+・
+
+namespace D3D11::Graphic
+・ShaderManager

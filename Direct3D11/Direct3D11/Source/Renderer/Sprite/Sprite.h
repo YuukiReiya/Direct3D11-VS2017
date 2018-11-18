@@ -11,6 +11,7 @@
 #include "../../Shader/ShaderBase/StructShaderBase.h"
 //#include "../Shader/ShaderManager.h"
 #include <DirectXMath.h>
+#include "../../FrameWork/API/ApplicationProgrammingInterface.h"
 #include "../IRenderer/IRenderer.h"
 #include "../Texture/Texture.h"
 
@@ -18,20 +19,16 @@
 #define DEBUG_SPRITE
 #endif // _DEBUG
 
-/*! Direct3D11関連の名前空間 */
-namespace D3D11 {
-
-	/*! 描画関連の名前空間 */
-	namespace Graphic {
-
+/*! APIの名前空間に含める */
+namespace API{
 		/*!
 			スプライトを扱うクラス
 		*/
 		class Sprite
-			:public IRenderer
+			:public IRenderer,public API::IAPI
 		{
 		public:
-			Sprite();
+			explicit Sprite();
 			~Sprite();
 
 			/*! 描画モード */
@@ -40,11 +37,13 @@ namespace D3D11 {
 				Multiple	/*!< アトラステクスチャ */
 			};
 
-
-			HRESULT Initialize();
+			HRESULT IAPI::Initialize();
+			void IAPI::Finalize();
+			//HRESULT Initialize();
 			void Release();
 
-			HRESULT Renderer();
+			void Renderer() {};
+			HRESULT IRenderer::Render() { return S_OK; };
 			HRESULT Render(Texture* pTexture, bool isReverse = false);
 			//	HRESULT Render(Texture* pTexture);
 
@@ -70,20 +69,10 @@ namespace D3D11 {
 			HRESULT CreateTilingVertex(DirectX::XMINT2 size);	/*!< タイリング用の頂点生成 */
 			HRESULT CreateSplitVertex(DirectX::XMINT2 size);	/*!< 分割用頂点生成 */
 
-
-			//ひとつでいい
-			ID3D11InputLayout* m_pVertexLayout;
-			ID3D11VertexShader* m_pVertexShader;
-			ID3D11PixelShader* m_pPixelShader;
-			ID3D11Buffer* m_pConstantBuffer;
-
-
-			//スプライト毎
 			std::string m_szShaderDataUsage;
-			uint32_t m_StencilMask;
-
-			ID3D11Buffer* m_pVertexBuffer;
-			ID3D11BlendState* m_pBlendState;
+			uint32_t	m_StencilMask;
+			Microsoft::WRL::ComPtr<ID3D11Buffer>		m_pVertexBuffer;
+			Microsoft::WRL::ComPtr<ID3D11BlendState>	m_pBlendState;
 
 			/****************************************/
 			/*		　スプライトのパラメータ		*/
@@ -105,6 +94,14 @@ namespace D3D11 {
 
 
 		};
+
+}
+
+/*! Direct3D11関連の名前空間 */
+namespace D3D11 {
+
+	/*! 描画関連の名前空間に含める */
+	namespace Graphic {
 
 		/****************************************/
 		/*		スプライトで扱う構造体			*/

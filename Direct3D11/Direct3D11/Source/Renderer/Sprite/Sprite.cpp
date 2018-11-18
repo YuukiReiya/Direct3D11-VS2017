@@ -20,12 +20,22 @@
 */
 using namespace D3D11;
 using namespace D3D11::Graphic;
+using namespace API;
 
+/*!
+	@def	定数宣言
+*/
+const float Sprite::c_VertexZ = 0;/*!< 板ポリの頂点座標のz値 */
+
+
+/*!
+	@brief	コンストラクタ
+*/
 Sprite::Sprite()
 {
 	//SecureZeroMemory(this, sizeof(this));
-	m_pVertexBuffer		= NULL;
-	m_pBlendState		= NULL;
+	m_pVertexBuffer		= nullptr;
+	m_pBlendState		= nullptr;
 	m_ActiveTextureIndex = { 0,0 };
 	m_Pos = { 0,0,0 };
 	m_DivNum = { 1,1 };
@@ -35,7 +45,6 @@ Sprite::Sprite()
 	m_szShaderDataUsage = ShaderManager::GetInstance().c_SpriteDefault;
 	m_StencilMask = 0xffffffff;
 }
-const float Sprite::c_VertexZ = 0;
 
 Sprite::~Sprite()
 {
@@ -71,6 +80,15 @@ HRESULT Sprite::Initialize()
 	}
 
 	return S_OK;
+}
+
+/*!
+	@brief	ファイナライズ
+
+*/
+void Sprite::Finalize()
+{
+	Release();/*< 開放 */
 }
 
 /*!
@@ -209,17 +227,12 @@ void Sprite::CreateAlphaBlendState()
 
 /*!
 	@brief	解放
+	@detail	COMポインタを使用しているのでResetの明示的な呼び出し
 */
 void Sprite::Release()
 {
-	if (m_pVertexBuffer!=NULL) {
-		m_pVertexBuffer->Release();
-		m_pVertexBuffer = NULL;
-	}
-	if (m_pBlendState != NULL) {
-		m_pBlendState->Release();
-		m_pBlendState = NULL;
-	}
+	m_pVertexBuffer.Reset();
+	m_pBlendState.Reset();
 }
 
 /*!
@@ -251,20 +264,19 @@ HRESULT Sprite::Render(Texture * pTexture, bool isReverse)
 	auto shaderData = ShaderManager::GetInstance().GetShaderData(m_szShaderDataUsage);
 
 	/*! 頂点インプットレイアウトセット */
-	Direct3D11::GetInstance().GetDeviceContext()->IASetInputLayout(shaderData->m_pVertexLayout);
+	Direct3D11::GetInstance().GetDeviceContext()->IASetInputLayout(shaderData->m_pVertexLayout.Get());
 
 	/*! シェーダーの登録 */
-	Direct3D11::GetInstance().GetDeviceContext()->VSSetShader(shaderData->m_pVertexShader, NULL, NULL);
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetShader(shaderData->m_pPixelShader, NULL, NULL);
+	Direct3D11::GetInstance().GetDeviceContext()->VSSetShader(shaderData->m_pVertexShader.Get(), NULL, NULL);
+	Direct3D11::GetInstance().GetDeviceContext()->PSSetShader(shaderData->m_pPixelShader.Get(), NULL, NULL);
 
 	/*! コンスタントバッファの登録 */
-	Direct3D11::GetInstance().GetDeviceContext()->VSSetConstantBuffers(0, 1, &shaderData->m_pConstantBuffer);
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetConstantBuffers(0, 1, &shaderData->m_pConstantBuffer);
-
+	Direct3D11::GetInstance().GetDeviceContext()->VSSetConstantBuffers(0, 1, shaderData->m_pConstantBuffer.GetAddressOf());
+	Direct3D11::GetInstance().GetDeviceContext()->PSSetConstantBuffers(0, 1, shaderData->m_pConstantBuffer.GetAddressOf());
 
 	/*! テクスチャ */
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetSamplers(0, 1, &pSampler);
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetShaderResources(0, 1, &pTex);
+	Direct3D11::GetInstance().GetDeviceContext()->PSSetSamplers(0, 1, pSampler);
+	Direct3D11::GetInstance().GetDeviceContext()->PSSetShaderResources(0, 1, pTex);
 
 	/*! 座標変換 */
 	DirectX::XMMATRIX mWorld, mTran, mRot, mScale;
@@ -286,7 +298,7 @@ HRESULT Sprite::Render(Texture * pTexture, bool isReverse)
 
 	/*! バッファへのアクセス許可(書き換え) */
 	hr = Direct3D11::GetInstance().GetDeviceContext()->Map(
-		shaderData->m_pConstantBuffer,
+		shaderData->m_pConstantBuffer.Get(),
 		NULL,
 		D3D11_MAP_WRITE_DISCARD,
 		NULL,
@@ -295,7 +307,7 @@ HRESULT Sprite::Render(Texture * pTexture, bool isReverse)
 	if (FAILED(hr)) {
 		std::string error = "Texture mapping is failed!";
 		ErrorLog(error);
-		Direct3D11::GetInstance().GetDeviceContext()->Unmap(shaderData->m_pConstantBuffer, NULL);/*!< アクセス権を閉じて抜ける */
+		Direct3D11::GetInstance().GetDeviceContext()->Unmap(shaderData->m_pConstantBuffer.Get(), NULL);/*!< アクセス権を閉じて抜ける */
 		return E_FAIL;
 	}
 
@@ -312,7 +324,7 @@ HRESULT Sprite::Render(Texture * pTexture, bool isReverse)
 	memcpy_s(pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb));
 
 	/*! アクセス許可終了 */
-	Direct3D11::GetInstance().GetDeviceContext()->Unmap(shaderData->m_pConstantBuffer, NULL);
+	Direct3D11::GetInstance().GetDeviceContext()->Unmap(shaderData->m_pConstantBuffer.Get(), NULL);
 
 	/*! 頂点バッファセット */
 	uint32_t stride = sizeof(SpriteVertex);
@@ -320,7 +332,7 @@ HRESULT Sprite::Render(Texture * pTexture, bool isReverse)
 	Direct3D11::GetInstance().GetDeviceContext()->IASetVertexBuffers(
 		0,
 		1,
-		&m_pVertexBuffer,
+		m_pVertexBuffer.GetAddressOf(),
 		&stride,
 		&offset
 	);
@@ -329,22 +341,22 @@ HRESULT Sprite::Render(Texture * pTexture, bool isReverse)
 	/*! ステンシルマスク */
 	//Direct3D11::GetInstance().GetDeviceContext()->RSSetState
 	//無くても透過される…
-	uint32_t blendColor= 0xffffffff;
-	Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(
-		m_pBlendState,
-		NULL,
-		//m_StencilMask
-		blendColor
-	);
+	//uint32_t blendColor= 0xffffffff;
+	//Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(
+	//	m_pBlendState.Get(),
+	//	NULL,
+	//	//m_StencilMask
+	//	blendColor
+	//);
 
 
 	/*! 透過色 */
-	//uint32_t blendColor= 0xffffffff;
-	//Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(
-	//	m_pBlendState,
-	//	NULL,
-	//	blendColor
-	//);
+	uint32_t blendColor= 0xffffffff;
+	Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(
+		m_pBlendState.Get(),
+		NULL,
+		blendColor
+	);
 
 	/*! 描画 */
 	Direct3D11::GetInstance().GetDeviceContext()->Draw(

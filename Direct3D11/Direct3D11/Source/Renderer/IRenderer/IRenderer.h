@@ -6,5 +6,7 @@
 */
 #pragma once
 __interface IRenderer {
+
+public:
 	HRESULT Render();
 };

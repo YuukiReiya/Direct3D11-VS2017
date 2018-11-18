@@ -22,7 +22,7 @@ static inline std::size_t GetArraySize(const Array(&)[Size])
 	@brief	•¶šƒR[ƒh•ÏŠ·
 	@return	•ÏŠ·•¶š—ñ
 */
-static inline std::basic_string<TCHAR> tString(std::string str) {
+static inline std::basic_string<TCHAR> To_TString(std::string str) {
 #ifdef _UNICODE
 	std::wstring ret;
 	size_t length = 0;
@@ -33,6 +33,16 @@ static inline std::basic_string<TCHAR> tString(std::string str) {
 	//TCHAR* ret = str;
 	return str;
 #endif // _UNICODE
+}
+
+static inline std::wstring To_WString(std::string str) 
+{
+	std::wstring ret;
+	size_t length = 0;
+	ret.resize(MAX_PATH - 1);
+	mbstowcs_s(&length, &ret.front(), ret.size(), str.c_str(), _TRUNCATE);
+	return ret;
+
 }
 
 /*!

@@ -37,10 +37,6 @@ namespace D3D11 {
 	{
 	public:
 		~Direct3D11();
-		static Direct3D11& GetInstance() {
-			static Direct3D11 instance;
-			return instance;
-		}
 
 		/*! ä÷êî */
 		bool Initialize(HWND hWnd);
@@ -53,6 +49,7 @@ namespace D3D11 {
 		ID3D11Device* GetDevice()const { return m_pDevice.Get(); }
 		ID3D11DeviceContext* GetDeviceContext()const { return m_pDeviceContext.Get(); }
 	private:
+		friend class Singleton<Direct3D11>;
 		Direct3D11();
 
 		/*! íËêî */

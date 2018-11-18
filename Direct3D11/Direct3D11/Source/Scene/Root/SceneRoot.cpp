@@ -41,17 +41,17 @@ void SceneRoot::Initialize()
 ISceneBase * SceneRoot::Update(ISceneBase * scene)
 {
 	/*! シーンの実行 */
-	ISceneBase*l_pNext = m_pScene->Update(this);
+	ISceneBase*pNext = m_pScene->Update(this);
 
 	/*! 戻り値が現在のシーンと異なっていればシーン遷移 */
-	if (l_pNext != m_pScene) 
+	if (pNext != m_pScene) 
 	{
 		/*! シーンの破棄 */
 		m_pScene->Finalize();
 		delete m_pScene;
 
 		/*!  */
-		Scene* casted = dynamic_cast<Scene*>(l_pNext);
+		Scene* casted = dynamic_cast<Scene*>(pNext);
 		m_pScene = casted;
 		m_pScene->Initialize();
 	}

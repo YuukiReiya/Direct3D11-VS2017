@@ -11,6 +11,13 @@
 #include <string>
 
 /*!
+	@brief	名前空間
+	@detail	usingディレクティブ
+*/
+using namespace D3D11;
+using namespace D3D11::Graphic;
+
+/*!
 	@def	定数宣言
 */
 const std::string ShaderManager::c_SpriteDefault = "SPRITE_DEFAULT";/*!< スプライトシェーダーのデフォルト設定 */
@@ -25,20 +32,11 @@ const std::string c_ComputeProfile		= "cs";						/*!< コンピュートシェーダー */
 const int c_ShaderModelStringArraySize	= 3;						/*!< シェーダーモデルの設定文字列(\0含む)の配列のサイズ ※上記Profileの文字列サイズ+終端文字分 */
 
 /*!
-	@brief	名前空間
-	@detail	usingディレクティブ
-*/
-using namespace D3D11;
-using namespace D3D11::Graphic;
-
-/*!
 	@brief	コンストラクタ
 */
-ShaderManager::ShaderManager()
+ShaderManager::ShaderManager() 
 {
-	SecureZeroMemory(this, sizeof(this));
-	/*! ZeroMemoryはSTL内部で使う変数も初期化するのでインスタンスを再生成して回避する */
-	m_pShaderDataMap = std::map<std::string, ShaderData*>();
+
 }
 
 /*!
@@ -211,8 +209,13 @@ HRESULT ShaderManager::MakeShader(std::string szFileName, std::string szFuncName
 {
 	/*! UNICODE、マルチバイト両対応用文字列変換 */
 	std::string sFilePath = c_ResourceHierarchy + szFileName;
-	auto tmp = tString(sFilePath);
-	const auto path = const_cast<LPTSTR>(tmp.c_str());
+
+	//auto tmp = To_TString(sFilePath);
+	//auto path = const_cast<LPCWSTR>(tmp.c_str());
+
+	/*! D3D11CompileFromFileの引数はマルチバイト */
+	auto tmp = To_WString(sFilePath);
+	auto path = const_cast<LPCWSTR>(tmp.c_str());
 
 	DWORD shaderFlags;
 #ifdef DEBUG_SHADER
@@ -221,7 +224,7 @@ HRESULT ShaderManager::MakeShader(std::string szFileName, std::string szFuncName
 	shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #endif
 
-	HREFTYPE hr;
+	HRESULT hr;
 
 	LPCSTR funcName		= szFuncName.c_str();
 	LPCSTR profileName	= szProfileName.c_str();
@@ -239,7 +242,6 @@ HRESULT ShaderManager::MakeShader(std::string szFileName, std::string szFuncName
 		ppBlob,
 		&pErrors
 	);
-	//HRESULT hr = D3DX11CompileFromFile(path, NULL, NULL, szFuncName, szProfileName, D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION, 0, NULL, ppBlob, &pErrors, NULL);
 	if (FAILED(hr)) {
 		std::string bufferError = (char*)pErrors->GetBufferPointer();
 		std::string error = "\"" + sFilePath + "\" is not compile from file!\n" + bufferError;
@@ -250,7 +252,9 @@ HRESULT ShaderManager::MakeShader(std::string szFileName, std::string szFuncName
 		pErrors->Release();
 		pErrors = NULL;
 	}
+
 	char szProfile[c_ShaderModelStringArraySize] = { 0 };
+
 	/*! 終端文字を含まないバッファのメモリを変数にコピー */
 	memcpy_s(szProfile, sizeof(profileName), profileName, (c_ShaderModelStringArraySize - 1));
 
@@ -327,3 +331,4 @@ ShaderData * ShaderManager::GetShaderData(std::string szKeyName)
 {
 	return m_pShaderDataMap[szKeyName];
 }
+

@@ -10,7 +10,7 @@
 #include "../MyGame.h"
 #include "../MemoryLeaks.h"
 //#include "../Sound/SoundManager/SoundManager.h"
-//#include "../Shader/ShaderManager.h"
+#include "../Shader/ShaderManager.h"
 #include "../Camera/Camera.h"
 
 
@@ -19,6 +19,7 @@
 */
 using namespace std;
 using namespace D3D11;
+using namespace D3D11::Graphic;
 
 /*!
 	@def	定数
@@ -51,7 +52,7 @@ bool Main::Initialize(HINSTANCE hInstance)
 	/*! ウィンドウのインスタンスを生成 */
 	m_pWindow = make_unique<Window>();
 
-	auto  tmp = tString(c_AppName);
+	auto  tmp = To_TString(c_AppName);
 	const auto appName = const_cast<LPCTSTR>(tmp.c_str());
 
 	/*! ウィンドウ作成 */
@@ -109,10 +110,10 @@ void Main::Loop()
 	//}
 
 	/*! シェーダー管理クラスの初期化 */
-	//hr = ShaderManager::GetInstance().Initialize();
-	//if (FAILED(hr)) {
-	//	return;
-	//}
+	hr = ShaderManager::GetInstance().Initialize();
+	if (FAILED(hr)) {
+		return;
+	}
 
 	/*! カメラの初期化 */
 	Camera::GetInstance().Initialize({ 0,0,-1 });
@@ -172,7 +173,7 @@ void Main::App()
 		time = timeGetTime();
 		frame = 0;
 
-		auto tmp = tString(str);
+		auto tmp = To_TString(str);
 		const auto fps = const_cast<LPTSTR>(tmp.c_str());
 		if (!SetWindowText(m_hWnd, fps)) {
 			WindowsErrorLog();

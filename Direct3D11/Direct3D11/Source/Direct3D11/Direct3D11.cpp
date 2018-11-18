@@ -374,14 +374,14 @@ bool Direct3D11::Initialize(HWND hWnd)
 */
 void Direct3D11::Release()
 {
-	//m_pRasterizerState.Reset();
-	//m_pSwapChain.Reset();
-	//m_pRenderTargetView.Reset();
-	//m_pDepthStencil.Reset();
-	//m_pDepthStencilView.Reset();
-	//m_pDepthStencilState.Reset();
-	//m_pDevice.Reset();
-	//m_pDeviceContext.Reset();
+	m_pRasterizerState.Reset();
+	m_pSwapChain.Reset();
+	m_pRenderTargetView.Reset();
+	m_pDepthStencil.Reset();
+	m_pDepthStencilView.Reset();
+	m_pDepthStencilState.Reset();
+	m_pDevice.Reset();
+	m_pDeviceContext.Reset();
 }
 
 /*!
@@ -431,7 +431,7 @@ void Direct3D11::ReportCOMs(std::string firstMessage)
 	if (m_pDebug.Get() != nullptr) {
 
 		auto str = firstMessage + "\n";
-		auto tmp = tString(str.c_str());
+		auto tmp = To_TString(str.c_str());
 		const auto message = const_cast<LPTSTR>(tmp.c_str());
 
 		/*! ウィンドウに任意の文字列を表示 */
