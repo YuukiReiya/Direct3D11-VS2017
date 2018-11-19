@@ -7,7 +7,7 @@
 */
 #pragma once
 #include <D3D11.h>
-#include <map>
+#include <unordered_map>
 #include <wrl/client.h>
 #include "../Singleton/Singleton.h"
 #include "../MemoryLeaks.h"
@@ -43,24 +43,6 @@ namespace D3D11 {
 			*/
 			~ShaderData()
 			{
-				//if (m_pVertexLayout != nullptr) { m_pVertexLayout->Release(); }
-				//m_pVertexLayout = nullptr;
-				//if (m_pVertexShader != nullptr) { m_pVertexShader->Release(); }
-				//m_pVertexShader = nullptr;
-				//if (m_pPixelShader != nullptr) { m_pPixelShader->Release(); }
-				//m_pPixelShader = nullptr;
-				//if (m_pConstantBuffer != nullptr) { m_pConstantBuffer->Release(); }
-				//m_pConstantBuffer = nullptr;
-
-				//if (m_pVertexLayout != NULL) { m_pVertexLayout->Release(); }
-				//m_pVertexLayout = NULL;
-				//if (m_pVertexShader != NULL) { m_pVertexShader->Release(); }
-				//m_pVertexShader = NULL;
-				//if (m_pPixelShader != NULL) { m_pPixelShader->Release(); }
-				//m_pPixelShader = NULL;
-				//if (m_pConstantBuffer != NULL) { m_pConstantBuffer->Release(); }
-				//m_pConstantBuffer = NULL;
-
 				m_pVertexLayout.Reset();
 				m_pVertexShader.Reset();
 				m_pPixelShader.Reset();
@@ -97,7 +79,8 @@ namespace D3D11 {
 			friend class Singleton<ShaderManager>;
 
 			ShaderData* m_pAddDataRef;/*!< データ追加用の参照メンバ */
-			std::map<std::string, ShaderData*>m_pShaderDataMap;
+			std::unordered_map<std::string, ShaderData*>m_pShaderDataUMap;
+
 
 		};
 

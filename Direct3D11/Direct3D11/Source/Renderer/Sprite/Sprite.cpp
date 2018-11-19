@@ -11,7 +11,7 @@
 #include "../../MemoryLeaks.h"
 #include "../../Camera/Camera.h"
 #include "../../Shader/ShaderManager.h"
-#include <math.h>
+//#include <math.h>
 
 
 /*!
@@ -25,32 +25,38 @@ using namespace API;
 /*!
 	@def	定数宣言
 */
-const float Sprite::c_VertexZ = 0;/*!< 板ポリの頂点座標のz値 */
-
+const float Sprite::c_NormalizeSize = 100.0f;	/*!< スケールが1の時の基準となるサイズ(100×100が大きさの基準) */
+const float Sprite::c_ScaleZ	= 0;			/*!< Z方向のスケールは常にゼロで計算する */
+const float Sprite::c_VertexZ	= 0;			/*!< 板ポリの頂点座標のz値 */
 
 /*!
 	@brief	コンストラクタ
 */
 Sprite::Sprite()
 {
-	//SecureZeroMemory(this, sizeof(this));
 	m_pVertexBuffer		= nullptr;
 	m_pBlendState		= nullptr;
 	m_ActiveTextureIndex = { 0,0 };
 	m_Pos = { 0,0,0 };
 	m_DivNum = { 1,1 };
-	m_Scale = { 1,1 ,1 };
+	m_Scale = { 1,1 ,0 };
 	m_Rot = {0,0,0};
 	m_TilingRatio = { 1,1 };
 	m_szShaderDataUsage = ShaderManager::GetInstance().c_SpriteDefault;
 	m_StencilMask = 0xffffffff;
 }
 
+/*!
+	@brief	デストラクタ
+*/
 Sprite::~Sprite()
 {
 	Release();
 }
 
+/*!
+	@brief	イニシャライズ
+*/
 HRESULT Sprite::Initialize()
 {
 	HRESULT hr;
@@ -223,8 +229,6 @@ void Sprite::CreateAlphaBlendState()
 	);
 }
 
-
-
 /*!
 	@brief	解放
 	@detail	COMポインタを使用しているのでResetの明示的な呼び出し
@@ -252,7 +256,11 @@ HRESULT Sprite::Render(Texture * pTexture, bool isReverse)
 
 	/*! 頂点を生成しデバイス側にバインド */
 	hr = CreateVertex(size);
-	if (FAILED(hr)) { ErrorLog("残念でした"); }
+	if (FAILED(hr)) {
+		std::string error = "Create vertex is failed!";
+		ErrorLog(error);
+		return E_FAIL;
+	}
 
 	CreateAlphaBlendState();
 
@@ -283,7 +291,7 @@ HRESULT Sprite::Render(Texture * pTexture, bool isReverse)
 	mWorld = DirectX::XMMatrixIdentity();
 	mTran = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
 	mRot = DirectX::XMMatrixRotationRollPitchYaw(m_Rot.x, m_Rot.y, m_Rot.z);
-	mScale = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z);
+	mScale = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, c_ScaleZ);
 
 	/*! ワールド変換 */
 	mWorld = mScale*mRot*mTran;
@@ -407,6 +415,9 @@ HRESULT Sprite::Render(Texture * pTexture, bool isReverse)
 //	return S_OK;
 //}
 
+/*!
+	@brief	板ポリの頂点生成
+*/
 HRESULT Sprite::CreateVertex(DirectX::XMINT2 size)
 {
 	/*! 頂点宣言 */
@@ -416,10 +427,10 @@ HRESULT Sprite::CreateVertex(DirectX::XMINT2 size)
 	float larger = size.x <= size.y ? size.y : size.x;
 
 	/*! 各頂点定義 */
-	leftTop.x		= -0.5f*size.x / larger;/*!< 左 */
-	rightBottom.x	=  0.5f*size.x / larger;/*!< 右 */
-	leftTop.y		=  0.5f*size.y / larger;/*!< 上 */
-	rightBottom.y	= -0.5f*size.y / larger;/*!< 下 */
+	leftTop.x		= -0.5f*size.x / c_NormalizeSize;/*!< 左 */
+	rightBottom.x	=  0.5f*size.x / c_NormalizeSize;/*!< 右 */
+	leftTop.y		=  0.5f*size.y / c_NormalizeSize;/*!< 上 */
+	rightBottom.y	= -0.5f*size.y / c_NormalizeSize;/*!< 下 */
 
 	/*! UV定義 */
 	uvLeftTop.x = uvLeftTop.y = 0;
@@ -482,7 +493,6 @@ HRESULT Sprite::CreateVertex(DirectX::XMINT2 size)
 			uvLeftTop.x,
 			uvRightBottom.y
 		),
-
 	}
 	};
 
@@ -528,7 +538,7 @@ HRESULT Sprite::CreateClampVertex(DirectX::XMINT2 size)
 	leftTop.y = 0.5f*size.y / larger;/*!< 上 */
 	rightBottom.y = -0.5f*size.y / larger;/*!< 下 */
 
-										  /*! UV定義 */
+	/*! UV定義 */
 	uvLeftTop.x = uvLeftTop.y = 0;
 	uvRightBottom.x = uvRightBottom.y = 1;
 
@@ -681,5 +691,13 @@ void Sprite::SetPos(DirectX::XMFLOAT3 pos)
 void Sprite::SetPos(DirectX::XMFLOAT2 pos)
 {
 	m_Pos = { pos.x,pos.y,m_Pos.z };
+}
+
+/*!
+	@brief	スケールのセッター
+*/
+void API::Sprite::SetScale(DirectX::XMFLOAT2 scale)
+{
+	m_Scale = { scale.x,scale.y,c_ScaleZ };
 }
 

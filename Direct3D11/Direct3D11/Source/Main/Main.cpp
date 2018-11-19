@@ -115,9 +115,6 @@ void Main::Loop()
 		return;
 	}
 
-	/*! ƒJƒƒ‰‚Ì‰Šú‰» */
-	Camera::GetInstance().Initialize({ 0,0,-1 });
-
 	/*! ƒV[ƒ“‚Ì‰Šú‰» */
 	m_pRoot = make_unique<SceneRoot>();
 	m_pRoot->Initialize();

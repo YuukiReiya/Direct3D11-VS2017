@@ -24,8 +24,8 @@ namespace API{
 		/*!
 			スプライトを扱うクラス
 		*/
-		class Sprite
-			:public IRenderer,public API::IAPI
+	class Sprite
+		:public API::IAPI
 		{
 		public:
 			explicit Sprite();
@@ -39,29 +39,26 @@ namespace API{
 
 			HRESULT IAPI::Initialize();
 			void IAPI::Finalize();
-			//HRESULT Initialize();
 			void Release();
-
-			void Renderer() {};
-			HRESULT IRenderer::Render() { return S_OK; };
 			HRESULT Render(Texture* pTexture, bool isReverse = false);
-			//	HRESULT Render(Texture* pTexture);
 
 			DirectX::XMFLOAT3 GetPos()const { return m_Pos; }
 
-			void SetPos(DirectX::XMFLOAT3 pos);//{ m_Pos.x = pos.x; m_Pos.y = pos.y;m_Pos.z = pos.z;}
+			void SetPos(DirectX::XMFLOAT3 pos);
 			void SetPos(DirectX::XMFLOAT2 pos);
 			void SetRot(DirectX::XMFLOAT3 rot) { m_Rot.x = rot.x, m_Rot.y = rot.y, m_Rot.z = rot.z; }
+			void SetScale(DirectX::XMFLOAT2 scale);
 			void SetSplitTexture(DirectX::XMINT2 divNum);/*!< テクスチャの分割 */
-			void SetActivateIndex(DirectX::XMINT2 index);/*!< 使用する描画するテクスチャを変更 */
+			void SetActivateIndex(DirectX::XMINT2 index);/*!< 描画に使用するするテクスチャを変更 */
 			void SetAlpha(float alpha) { m_Alpha = alpha; }
 			void SetStencilMask(uint32_t mask) { m_StencilMask = mask; }
 
 			void CreateAlphaBlendState();
 
 		private:
-
 			static constexpr int c_VertexCount = 4;/*!< スプライトの頂点数 */
+			static const float c_NormalizeSize;
+			static const float c_ScaleZ;
 			static const float c_VertexZ;
 			HRESULT CreateVertex(DirectX::XMINT2 size);
 
@@ -93,7 +90,7 @@ namespace API{
 			float m_Alpha;
 
 
-		};
+	};
 
 }
 

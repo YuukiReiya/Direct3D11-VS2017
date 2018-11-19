@@ -6,6 +6,8 @@
 */
 #include "SampleScene.h"
 #include "../../Shader/ShaderManager.h"
+#include "../../Input/Keyboard/Keyboard.h"
+
 /*!
 	@brief	名前空間
 	@detail	usingディレクティブ
@@ -67,6 +69,27 @@ void SampleScene::Finalize()
 */
 Scene * SampleScene::Update(SceneRoot * root)
 {
+	Keyboard::Update();
+
+	auto pos = m_pSprite.get()->GetPos();
+
+	pos.x -= Keyboard::GetButton('A') ? 0.1f : 0;
+	pos.x += Keyboard::GetButton('D') ? 0.1f : 0;
+
+	pos.z += Keyboard::GetButton('W') ? 0.1f : 0;
+	pos.z -= Keyboard::GetButton('S') ? 0.1f : 0;
+
+	static	DirectX::XMFLOAT2 scale = { 1,1 };
+	scale.x+= Keyboard::GetButton('Z') ? 0.1f : 0;
+	scale.x -= Keyboard::GetButton('C') ? 0.1f : 0;
+
+	static DirectX::XMFLOAT3 angle = { 0,0,0 };
+	angle.x+= Keyboard::GetButton('N') ? 0.1f : 0;
+	angle.x -= Keyboard::GetButton('M') ? 0.1f : 0;
+
+	m_pSprite.get()->SetPos(pos);
+	m_pSprite.get()->SetScale(scale);
+	m_pSprite.get()->SetRot(angle);
 	return this;
 }
 

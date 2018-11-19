@@ -46,7 +46,6 @@ namespace API {
 		HRESULT Initialize(TileMode tileMode, FilteringMode filteringMode);
 		HRESULT Initialize(std::string filePath, DirectX::XMINT2 size);
 		HRESULT Load(std::string filePath, DirectX::XMINT2 size);
-
 		void IAPI::Finalize();
 
 		/*! セッター */

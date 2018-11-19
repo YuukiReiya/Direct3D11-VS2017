@@ -27,10 +27,13 @@ Camera::Camera()
 		m_FieldOfView	= c_FieldOfView;
 		m_NearClip		= c_NearClip;
 		m_FarClip		= c_FarClip;
-		m_EyePt			= DirectX::XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
+		m_EyePt			= DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 0.0f);
 		m_LookAtPt		= DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 		m_UpVec			= DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	}
+
+	/*! çsóÒÇÃê∂ê¨ */
+	Initialize(GetEyePt());
 }
 
 /*!

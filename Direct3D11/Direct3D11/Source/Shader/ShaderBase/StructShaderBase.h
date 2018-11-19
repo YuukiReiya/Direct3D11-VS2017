@@ -32,7 +32,13 @@ namespace D3D11 {
 			template<typename alignType>
 			using ALIGN16 = __declspec(align(16)) alignType;/*!< 16バイト境界に型を設定するための別名 */
 
-			ALIGN16<DirectX::XMMATRIX> m_WVP;/*< ワールド行列 */
+			/*! メンバの行列 */
+			//ALIGN16<DirectX::XMMATRIX>m_WorldMatrix;		/*!< ワールド */
+			//ALIGN16<DirectX::XMMATRIX>m_ProjectionMatrix;	/*!< 射影行列 */
+			//ALIGN16<DirectX::XMMATRIX>m_ViewMatrix;			/*!< ビュー行列 */
+
+			ALIGN16<DirectX::XMMATRIX> m_WVP;/*< ワールド変換後の行列 */
+
 		};
 	};
 };

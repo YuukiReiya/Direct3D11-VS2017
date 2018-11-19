@@ -29,7 +29,7 @@ const std::string c_GeometryProfile		= "gs";						/*!< ジオメトリシェーダー */
 const std::string c_HullProfile			= "hs";						/*!< ハルシェーダー */
 const std::string c_DomainProfile		= "ds";						/*!< ドメインシェーダー */
 const std::string c_ComputeProfile		= "cs";						/*!< コンピュートシェーダー */
-const int c_ShaderModelStringArraySize	= 3;						/*!< シェーダーモデルの設定文字列(\0含む)の配列のサイズ ※上記Profileの文字列サイズ+終端文字分 */
+constexpr int c_ShaderModelStringArraySize	= 3;					/*!< シェーダーモデルの設定文字列(\0含む)の配列のサイズ ※上記Profileの文字列サイズ+終端文字分 */
 
 /*!
 	@brief	コンストラクタ
@@ -175,10 +175,10 @@ HRESULT ShaderManager::Initialize()
 */
 void ShaderManager::Finalize()
 {
-	for (auto it : m_pShaderDataMap) {
+	for (auto it : m_pShaderDataUMap) {
 		delete it.second;
 	}
-	m_pShaderDataMap.clear();
+	m_pShaderDataUMap.clear();
 	m_pAddDataRef = nullptr;
 }
 
@@ -190,13 +190,13 @@ void ShaderManager::Finalize()
 HRESULT ShaderManager::AddNewShaderData(std::string szKeyName, ShaderData * pNewShaderData)
 {
 	/*! 登録可能か判定 */
-	bool isFound = m_pShaderDataMap.find(szKeyName) == m_pShaderDataMap.end();
+	bool isFound = m_pShaderDataUMap.find(szKeyName) == m_pShaderDataUMap.end();
 
 	/*! 登録しようとしたキー名は既に登録済みのため追加しない */
 	if (!isFound) { return E_FAIL; }
 
 	/*! キー名でリスト(map)に追加 */
-	m_pShaderDataMap[szKeyName] = pNewShaderData;
+	m_pShaderDataUMap[szKeyName] = pNewShaderData;
 
 	return S_OK;
 }
@@ -256,7 +256,7 @@ HRESULT ShaderManager::MakeShader(std::string szFileName, std::string szFuncName
 	char szProfile[c_ShaderModelStringArraySize] = { 0 };
 
 	/*! 終端文字を含まないバッファのメモリを変数にコピー */
-	memcpy_s(szProfile, sizeof(profileName), profileName, (c_ShaderModelStringArraySize - 1));
+	strncpy_s(szProfile, profileName, (c_ShaderModelStringArraySize - 1));/*!< 終端文字のバッファーを一つ確保しておく */
 
 	/*! 頂点シェーダー(Vertex Shader) */
 	if (strcmp(szProfile, c_VertexProfile.c_str()) == 0) {
@@ -329,6 +329,6 @@ HRESULT ShaderManager::MakeShader(std::string szFileName, std::string szFuncName
 */
 ShaderData * ShaderManager::GetShaderData(std::string szKeyName)
 {
-	return m_pShaderDataMap[szKeyName];
+	return m_pShaderDataUMap[szKeyName];
 }
 
