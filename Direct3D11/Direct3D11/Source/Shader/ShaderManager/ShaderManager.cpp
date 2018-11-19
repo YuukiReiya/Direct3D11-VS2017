@@ -1,14 +1,13 @@
 #pragma comment(lib,"d3dCompiler.lib")
 
 #include <d3dcompiler.h>
-
-#include "../Direct3D11/Direct3D11.h"
-#include "ShaderManager.h"
-#include "../MemoryLeaks.h"
-#include "../MyGame.h"
-#include "../Renderer/Sprite/Sprite.h"
-//#include "../Mesh/Mesh.h"
 #include <string>
+
+#include "../../Direct3D11/Direct3D11.h"
+#include "ShaderManager.h"
+#include "../../MemoryLeaks.h"
+#include "../../MyGame.h"
+#include "../../FrameWork/API/Renderer/Sprite/Sprite.h"
 
 /*!
 	@brief	–¼‘O‹óŠÔ

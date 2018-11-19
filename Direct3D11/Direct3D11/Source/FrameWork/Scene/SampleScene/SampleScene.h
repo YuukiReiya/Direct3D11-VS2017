@@ -7,8 +7,9 @@
 #pragma once
 #include <memory>
 #include "../Scene.h"
-#include "../../Renderer/Sprite/Sprite.h"
-#include "../../Renderer/Texture/Texture.h"
+#include "../../API/Renderer/Sprite/Sprite.h"
+#include "../../API/Renderer/Texture/Texture.h"
+//#include "../../"
 
 class SampleScene final
 	: public Scene

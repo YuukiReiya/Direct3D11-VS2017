@@ -1,8 +1,8 @@
 #include "Texture.h"
-#include "../../Direct3D11/Direct3D11.h"
-#include "../../MemoryLeaks.h"
-#include "../../MyGame.h"
-#include "../../WindowsImagingComponent/WICTextureLoader.h"
+#include "../../../../Direct3D11/Direct3D11.h"
+#include "../../../../MyGame.h"
+#include "../../../../MemoryLeaks.h"
+#include "../../../WindowsImagingComponent/WICTextureLoader.h"
 
 /*!
 	wincodec.hのCreateDecoderFromFilenameの引数がマルチバイト文字列の引数のため

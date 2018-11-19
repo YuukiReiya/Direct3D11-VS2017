@@ -9,7 +9,7 @@
 #include <string>
 #include <DirectXMath.h>
 #include <wrl/client.h>
-#include "../../FrameWork/API/ApplicationProgrammingInterface.h"
+#include "../../ApplicationProgrammingInterface.h"
 
 /*! API‚Ì–¼‘O‹óŠÔ‚ÉŠÜ‚ß‚é */
 namespace API {

@@ -5,8 +5,8 @@
 	@brief	サンプルシーン
 */
 #include "SampleScene.h"
-#include "../../Shader/ShaderManager.h"
-#include "../../Input/Keyboard/Keyboard.h"
+#include "../../../Shader/ShaderManager/ShaderManager.h"
+#include "../../API/Input/Keyboard/Keyboard.h"
 
 /*!
 	@brief	名前空間
