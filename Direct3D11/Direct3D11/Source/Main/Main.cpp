@@ -1,5 +1,5 @@
 /*!
-	@file	MAIN.cpp
+	@file	Main.cpp
 	@date	2018/11/10
 	@author	番場 宥輝
 	@brief	アプリケーションメインエントリーポイント
@@ -12,6 +12,7 @@
 #include "../Audio/AudioDevice.h"
 #include "../ShaderManager/ShaderManager.h"
 #include "../Camera/Camera.h"
+#include "../Debug/Debug.h"
 
 
 /*!
@@ -64,9 +65,16 @@ bool Main::Initialize(HINSTANCE hInstance)
 
 	/*! Direct3Dデバイスの初期化 */
 	if (!Direct3D11::GetInstance().Initialize(m_hWnd)) { return false; }
+
 	/*! デバッグコンソール表示 */
 #ifdef DEBUG_CONSOLE
-	if (!DisplayConsole()) { return false; }
+
+	/*! コンソールウィンドウの表示 */
+	if (!Debug::CreateConsoleWindow()) { return false; }
+
+	/*! 生成したコンソールウィンドウの閉じるボタンを無効化 */
+	Debug::DisableCloseButton();
+
 #endif
 
 	/*! 初期化完了 */
@@ -86,7 +94,6 @@ void Main::Finalize()
 */
 void Main::Release()
 {
-	//Direct3D11::GetInstance().ReportCOMs();
 
 	/*! ウィンドウの開放 */
 	m_pWindow.reset();
@@ -139,9 +146,9 @@ void Main::Loop()
 			App();/*!< App処理 */
 		}
 	}
+	/*! コンソールウィンドウの破棄 */
 #ifdef DEBUG_CONSOLE
-	auto h = GetConsoleWindow();/*!< デバッグコンソールの開放 */
-	ShowWindow(h, SW_HIDE);
+	Debug::DestroyConsoleWindow();
 #endif // DEBUG
 
 
@@ -251,27 +258,4 @@ void Main::SleepApp()
 		timeEndPeriod(1);	/*!< 戻す */
 	}
 	QueryPerformanceCounter(&m_TimeStart);
-}
-
-/*!
-	@brief	デバッグ用のコンソールを表示
-*/
-bool Main::DisplayConsole()
-{
-	_CrtDumpMemoryLeaks();
-
-	/*! コンソール作成 */
-	if (!AllocConsole()) {
-		ErrorLog("Debug Console Window is not create!");
-		return false;
-	}
-
-	/*! 標準入出力に割り当てる */
-	FILE*fp;
-
-	/*! 新たなファイルを開きストリームと結びつける */
-	freopen_s(&fp, "CONOUT$", "w", stdout);
-	freopen_s(&fp, "CONIN$", "r", stdin);
-
-	return true;
 }
