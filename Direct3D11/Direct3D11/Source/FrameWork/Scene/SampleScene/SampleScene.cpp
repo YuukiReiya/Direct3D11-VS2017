@@ -53,6 +53,14 @@ void SampleScene::Initialize()
 	m_pSprite->Initialize();
 	m_pTex2->Load("test.png", { 256,256 });
 	m_pSprite2->Initialize();
+
+	m_pWav = make_unique<Wav>();
+	m_pWav->Load("07 フォーチュンナンバー0405.wav");
+	m_pWav->Play(true);
+	m_pWav2 = make_unique<Wav>();
+	m_pWav2->Load("Resource/Sound/se.wav");
+	m_pWav2->Play(true);
+
 }
 
 /*!
@@ -90,6 +98,20 @@ Scene * SampleScene::Update(SceneRoot * root)
 	m_pSprite.get()->SetPos(pos);
 	m_pSprite.get()->SetScale(scale);
 	m_pSprite.get()->SetRot(angle);
+
+
+	if (Keyboard::GetButtonDown(Keyboard::LEFT)) {
+		printf("aaka");
+		m_pWav->Pause();
+	}
+	else if (Keyboard::GetButtonDown(Keyboard::UP)) {
+		m_pWav->Play();
+	}
+	else if (Keyboard::GetButtonDown(Keyboard::RIGHT)) {
+		m_pWav->Stop();
+	}
+
+
 	return this;
 }
 

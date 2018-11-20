@@ -1,50 +1,65 @@
 /*
-	@file	Wave.h
+	@file	Wav.h
 	@date	2018/02/11
 	@author	番場 宥輝
-	@brief	Waveサウンド
+	@brief	Wavサウンド
 */
-#include "Wave.h"
-#include "../../MemoryLeaks.h"
-#include "../../MyGame.h"
-#include "../SoundManager/SoundManager.h"
+#include "Wav.h"
+#include "../../../../MyGame.h"
+#include "../../../../MemoryLeaks.h"
+#include "../../../../Audio/AudioDevice.h"
 
+/*!
+	@brief	名前空間
+	@detail	usingディレクティブ
+*/
+using namespace API;
+using namespace D3D11::Sound;
 
 /*!
 	@brief	コンストラクタ
 */
-Wave::Wave()
+Wav::Wav()
 {
-	SecureZeroMemory(this, sizeof(Wave));
+	Initialize();
 }
 
 /*!
 	@brief	デストラクタ
 */
-Wave::~Wave()
+Wav::~Wav()
 {
-	Release();
+	Finalize();
 }
 
 /*!
-	@brief	Waveファイル読み込み
+	@brief	イニシャライズ
 */
-bool Wave::Load(std::string filePath)
+HRESULT Wav::Initialize() 
+{
+	SecureZeroMemory(this, sizeof(this));
+	return S_OK;
+}
+
+/*!
+	@brief		Wavファイル読み込み
+	@param[in]	読み込むファイルのパス
+*/
+bool Wav::Load(std::string filePath)
 {
 	HMMIO hMmio = NULL;				/*!< WindowsマルチメディアAPIハンドル */
-	DWORD waveSize = 0;				/*!< Waveデータサイズ */
-
-	WAVEFORMATEX*	pFormat;		/*!< Waveフォーマット */
+	DWORD waveSize = 0;				/*!< Wavデータサイズ */
+	WAVEFORMATEX*	pFormat;		/*!< Wavフォーマット */
 	MMCKINFO		chunkInfo;		/*!< チャンク情報 */
 	MMCKINFO		riffChunkInfo;	/*!< 最上部チャンク */
 	PCMWAVEFORMAT	pcmFormat;		/*!< PCMフォーマット */
 
-	/*! Waveファイル内のヘッダー情報読み込み */
-	auto s_path = tString(filePath);
+	/*! Wavファイル内のヘッダー情報読み込み */
+	auto s_path = To_TString(filePath);
 	const auto path = const_cast<LPTSTR>(s_path.c_str());
 	hMmio = mmioOpen(path, NULL, MMIO_ALLOCBUF | MMIO_READ);
 
-	/*! Waveファイルの読み込み失敗 */
+	/*! Wavファイルの読み込み失敗 */
 	if (hMmio == NULL) {
 		std::string error = "\"" + filePath + "\" is not load in sound!";
 		ErrorLog(error);
@@ -73,8 +88,8 @@ bool Wave::Load(std::string filePath)
 	DWORD offset = chunkInfo.dwDataOffset;
 	mmioRead(hMmio, (char*)m_pWaveBuffer, waveSize);
 
-	/*! サウンドマネージャーの参照 */
-	auto& manager = SoundManager::GetInstance();
+	/*! オーディオデバイスの参照 */
+	auto& manager = AudioDevice::GetInstance();
 
 	/*! ソースボイスにデータ詰め込み */
 	XAUDIO2_SEND_DESCRIPTOR sendDescriptor;
@@ -97,20 +112,29 @@ bool Wave::Load(std::string filePath)
 }
 
 /*!
+	@brief	ファイナライズ
+*/
+void Wav::Finalize() 
+{
+	Release();/*!< メモリ開放 */
+}
+
+/*!
 	@brief	解放
 */
-void Wave::Release()
+void Wav::Release()
 {
-	m_pSourceVoice->DestroyVoice();
 	SAFE_DELETE(m_pWaveBuffer);
 }
 
 /*!
-	@brief	再生
+	@brief		再生
+	@detail		一時停止、停止後の"再生"もこれを使う
+	@param[in]	ループフラグ
 */
-void Wave::Play(bool isLoop)
+void Wav::Play(bool isLoop)
 {
-	//サブミット
+	/*! サブミット */
 	XAUDIO2_BUFFER buffer = { 0 };
 	SecureZeroMemory(&buffer, sizeof(buffer));
 	buffer.Flags = XAUDIO2_END_OF_STREAM;
@@ -121,9 +145,9 @@ void Wave::Play(bool isLoop)
 	if (isLoop) {
 
 		buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
-
 	}
 	else {
+
 		buffer.LoopBegin = XAUDIO2_NO_LOOP_REGION;
 		buffer.LoopCount = 0;
 	}
@@ -139,8 +163,33 @@ void Wave::Play(bool isLoop)
 /*!
 	@brief	停止
 */
-void Wave::Stop()
+void Wav::Stop()
 {
 	m_pSourceVoice->Stop(0, XAUDIO2_COMMIT_NOW);
+	m_pSourceVoice->FlushSourceBuffers();
+}
+
+/*!
+	@brief	一時停止
+*/
+void API::Wav::Pause()
+{
+	m_pSourceVoice->Stop(0, XAUDIO2_COMMIT_NOW);
+}
+
+
+/*!
+	@brief		音量変更
+	@detail		範囲 0～1
+	@param[in]	設定する音量
+*/
+void API::Wav::SetVolume(float vol)
+{
+	m_pSourceVoice->SetVolume(vol);
+}
+
+const float API::Wav::GetVolume() const
+{
+	return 0.0f;
 }
 

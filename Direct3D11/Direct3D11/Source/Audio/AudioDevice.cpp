@@ -4,28 +4,27 @@
 	@author	番場 宥輝
 	@brief	サウンド管理クラス
 */
-#include <map>
-#include "../../MemoryLeaks.h"
-#include "SoundManager.h"
-#include "../../MyGame.h"
+#include "AudioDevice.h"
+#include "../MyGame.h"
+#include "../MemoryLeaks.h"
 
 /*!
-	@var	Index
-	@brief	連想配列で格納した
+	@brief	名前空間
+	@detail	usingディレクティブ
 */
-std::map<std::string, int> Index;
+using namespace D3D11::Sound;
 
 /*!
 	@brief	コンストラクタ
 */
-SoundManager::SoundManager()
+AudioDevice::AudioDevice()
 {
 }
 
 /*!
 	@brief	デストラクタ
 */
-SoundManager::~SoundManager()
+AudioDevice::~AudioDevice()
 {
 	Finalize();
 }
@@ -33,7 +32,7 @@ SoundManager::~SoundManager()
 /*!
 	@brief	初期化
 */
-HRESULT SoundManager::Initialize()
+HRESULT AudioDevice::Initialize()
 {
 	/*! COMライブラリの初期化 */
 	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED))) {
@@ -62,15 +61,16 @@ HRESULT SoundManager::Initialize()
 /*!
 	@brief	破棄
 */
-void SoundManager::Finalize()
+void AudioDevice::Finalize()
 {
 	Release();
+
 }
 
 /*!
 	@brief	メンバの解放
 */
-void SoundManager::Release()
+void AudioDevice::Release()
 {
 	if (m_pMasteringVoice) { m_pMasteringVoice->DestroyVoice(); m_pMasteringVoice = nullptr; }
 	if (m_pXAudio2) { m_pXAudio2->Release(); m_pXAudio2 = nullptr; }

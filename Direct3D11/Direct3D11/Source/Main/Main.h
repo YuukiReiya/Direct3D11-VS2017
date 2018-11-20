@@ -4,9 +4,11 @@
 	@author	番場 宥輝
 	@brief	アプリケーションメインエントリーポイント
 */
-#ifdef _DEBUG
-#define DEBUG_FPS//FPSを表示
+#if defined DEBUG || defined _DEBUG
+#define DEBUG_FPS		/*!< FPS表示 */
+#define DEBUG_CONSOLE	/*!< コンソール表示 */
 #endif // _DEBUG
+
 #pragma once
 #include <Windows.h>
 #include <mmsystem.h>
@@ -32,6 +34,7 @@ private:
 	void Update();
 	void Render();
 	void SleepApp();
+	bool DisplayConsole();
 
 	static const std::string c_AppName;
 	static const int	c_FPS;

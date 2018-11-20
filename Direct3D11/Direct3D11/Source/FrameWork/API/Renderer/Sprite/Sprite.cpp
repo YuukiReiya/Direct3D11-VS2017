@@ -11,8 +11,6 @@
 #include "../../../../MemoryLeaks.h"
 #include "../../../../Camera/Camera.h"
 #include "../../../../Shader/ShaderManager/ShaderManager.h"
-//#include <math.h>
-
 
 /*!
 	@brief	–¼‘O‹óŠÔ

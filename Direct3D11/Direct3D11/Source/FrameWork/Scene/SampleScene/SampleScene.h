@@ -9,7 +9,7 @@
 #include "../Scene.h"
 #include "../../API/Renderer/Sprite/Sprite.h"
 #include "../../API/Renderer/Texture/Texture.h"
-//#include "../../"
+#include "../../API/Sound/Wav/Wav.h"
 
 class SampleScene final
 	: public Scene
@@ -28,5 +28,7 @@ private:
 	std::unique_ptr<API::Sprite>m_pSprite;
 	std::unique_ptr<API::Texture>m_pTex2;
 	std::unique_ptr<API::Sprite>m_pSprite2;
+	std::unique_ptr<API::Wav>m_pWav;
+	std::unique_ptr<API::Wav>m_pWav2;
 };
 

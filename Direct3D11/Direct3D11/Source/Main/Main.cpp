@@ -9,7 +9,7 @@
 #include "../Direct3D11/Direct3D11.h"
 #include "../MyGame.h"
 #include "../MemoryLeaks.h"
-//#include "../Sound/SoundManager/SoundManager.h"
+#include "../Audio/AudioDevice.h"
 #include "../Shader/ShaderManager/ShaderManager.h"
 #include "../Camera/Camera.h"
 
@@ -20,6 +20,7 @@
 using namespace std;
 using namespace D3D11;
 using namespace D3D11::Graphic;
+using namespace D3D11::Sound;
 
 /*!
 	@def	定数
@@ -63,6 +64,10 @@ bool Main::Initialize(HINSTANCE hInstance)
 
 	/*! Direct3Dデバイスの初期化 */
 	if (!Direct3D11::GetInstance().Initialize(m_hWnd)) { return false; }
+	/*! デバッグコンソール表示 */
+#ifdef DEBUG_CONSOLE
+	if (!DisplayConsole()) { return false; }
+#endif
 
 	/*! 初期化完了 */
 	return true;
@@ -89,11 +94,8 @@ void Main::Release()
 	/*! Direct3Dデバイスの開放 */
 	Direct3D11::GetInstance().Release();
 
-	/*! サウンドマネージャーの開放 */
-	//SoundManager::GetInstance().Release();
-
-	//作ったシェーダーの開放を行っていないためメモリリークする
-
+	/*! オーディオデバイスの開放 */
+	AudioDevice::GetInstance().Finalize();
 }
 
 /*!	
@@ -103,11 +105,11 @@ void Main::Loop()
 {
 	HRESULT hr;
 
-	/*! サウンドマネージャーの初期化 */
-	//hr = SoundManager::GetInstance().Initialize();
-	//if (FAILED(hr)) {
-	//	return;
-	//}
+	/*! オーディオデバイスの初期化 */
+	hr = AudioDevice::GetInstance().Initialize();
+	if (FAILED(hr)) {
+		return;
+	}
 
 	/*! シェーダー管理クラスの初期化 */
 	hr = ShaderManager::GetInstance().Initialize();
@@ -137,6 +139,12 @@ void Main::Loop()
 			App();/*!< App処理 */
 		}
 	}
+#ifdef DEBUG_CONSOLE
+	auto h = GetConsoleWindow();/*!< デバッグコンソールの開放 */
+	ShowWindow(h, SW_HIDE);
+#endif // DEBUG
+
+
 }
 
 /*
@@ -243,4 +251,27 @@ void Main::SleepApp()
 		timeEndPeriod(1);	/*!< 戻す */
 	}
 	QueryPerformanceCounter(&m_TimeStart);
+}
+
+/*!
+	@brief	デバッグ用のコンソールを表示
+*/
+bool Main::DisplayConsole()
+{
+	_CrtDumpMemoryLeaks();
+
+	/*! コンソール作成 */
+	if (!AllocConsole()) {
+		ErrorLog("Debug Console Window is not create!");
+		return false;
+	}
+
+	/*! 標準入出力に割り当てる */
+	FILE*fp;
+
+	/*! 新たなファイルを開きストリームと結びつける */
+	freopen_s(&fp, "CONOUT$", "w", stdout);
+	freopen_s(&fp, "CONIN$", "r", stdin);
+
+	return true;
 }
