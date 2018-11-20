@@ -7,9 +7,9 @@
 #pragma once
 #include <memory>
 #include "../Scene.h"
-#include "../../API/Renderer/Sprite/Sprite.h"
-#include "../../API/Renderer/Texture/Texture.h"
-#include "../../API/Sound/Wav/Wav.h"
+#include "../../Sprite/Sprite.h"
+#include "../../Texture/Texture.h"
+#include "../../Wave/Wave.h"
 
 class SampleScene final
 	: public Scene
@@ -28,7 +28,7 @@ private:
 	std::unique_ptr<API::Sprite>m_pSprite;
 	std::unique_ptr<API::Texture>m_pTex2;
 	std::unique_ptr<API::Sprite>m_pSprite2;
-	std::unique_ptr<API::Wav>m_pWav;
-	std::unique_ptr<API::Wav>m_pWav2;
+	std::unique_ptr<API::Wave>m_pWav;
+	std::unique_ptr<API::Wave>m_pWav2;
 };
 

@@ -1,23 +1,23 @@
 /*
-	@file	Wav.h
+	@file	Wave.h
 	@date	2018/02/11
 	@author	番場 宥輝
-	@brief	Wavサウンド
+	@brief	Waveサウンド
 */
 #pragma once
 #include <string>
 #include <XAudio2.h>
-#include "../../ApplicationProgrammingInterface.h"
+#include "../API/ApplicationProgrammingInterface.h"
 
 /*! API名前空間に含める */
 namespace API {
 
-	class Wav
+	class Wave
 		:public API::IAPI
 	{
 	public:
-		explicit Wav();
-		~Wav();
+		explicit Wave();
+		~Wave();
 
 		HRESULT API::IAPI::Initialize();
 		void API::IAPI::Finalize();

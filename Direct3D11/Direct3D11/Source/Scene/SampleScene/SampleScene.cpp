@@ -5,8 +5,8 @@
 	@brief	サンプルシーン
 */
 #include "SampleScene.h"
-#include "../../../Shader/ShaderManager/ShaderManager.h"
-#include "../../API/Input/Keyboard/Keyboard.h"
+#include "../../ShaderManager/ShaderManager.h"
+#include "../../Input/Keyboard/Keyboard.h"
 
 /*!
 	@brief	名前空間
@@ -54,10 +54,10 @@ void SampleScene::Initialize()
 	m_pTex2->Load("test.png", { 256,256 });
 	m_pSprite2->Initialize();
 
-	m_pWav = make_unique<Wav>();
+	m_pWav = make_unique<Wave>();
 	m_pWav->Load("07 フォーチュンナンバー0405.wav");
 	m_pWav->Play(true);
-	m_pWav2 = make_unique<Wav>();
+	m_pWav2 = make_unique<Wave>();
 	m_pWav2->Load("Resource/Sound/se.wav");
 	m_pWav2->Play(true);
 

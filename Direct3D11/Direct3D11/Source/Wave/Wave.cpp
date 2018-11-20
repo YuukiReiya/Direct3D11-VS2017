@@ -1,13 +1,13 @@
 /*
-	@file	Wav.h
+	@file	Wave.h
 	@date	2018/02/11
 	@author	番場 宥輝
-	@brief	Wavサウンド
+	@brief	Waveサウンド
 */
-#include "Wav.h"
-#include "../../../../MyGame.h"
-#include "../../../../MemoryLeaks.h"
-#include "../../../../Audio/AudioDevice.h"
+#include "Wave.h"
+#include "../MyGame.h"
+#include "../MemoryLeaks.h"
+#include "../Audio/AudioDevice.h"
 
 /*!
 	@brief	名前空間
@@ -19,7 +19,7 @@ using namespace D3D11::Sound;
 /*!
 	@brief	コンストラクタ
 */
-Wav::Wav()
+Wave::Wave()
 {
 	Initialize();
 }
@@ -27,7 +27,7 @@ Wav::Wav()
 /*!
 	@brief	デストラクタ
 */
-Wav::~Wav()
+Wave::~Wave()
 {
 	Finalize();
 }
@@ -35,31 +35,31 @@ Wav::~Wav()
 /*!
 	@brief	イニシャライズ
 */
-HRESULT Wav::Initialize() 
+HRESULT Wave::Initialize() 
 {
 	SecureZeroMemory(this, sizeof(this));
 	return S_OK;
 }
 
 /*!
-	@brief		Wavファイル読み込み
+	@brief		Waveファイル読み込み
 	@param[in]	読み込むファイルのパス
 */
-bool Wav::Load(std::string filePath)
+bool Wave::Load(std::string filePath)
 {
 	HMMIO hMmio = NULL;				/*!< WindowsマルチメディアAPIハンドル */
-	DWORD waveSize = 0;				/*!< Wavデータサイズ */
-	WAVEFORMATEX*	pFormat;		/*!< Wavフォーマット */
+	DWORD waveSize = 0;				/*!< Waveデータサイズ */
+	WAVEFORMATEX*	pFormat;		/*!< Waveフォーマット */
 	MMCKINFO		chunkInfo;		/*!< チャンク情報 */
 	MMCKINFO		riffChunkInfo;	/*!< 最上部チャンク */
 	PCMWAVEFORMAT	pcmFormat;		/*!< PCMフォーマット */
 
-	/*! Wavファイル内のヘッダー情報読み込み */
+	/*! Waveファイル内のヘッダー情報読み込み */
 	auto s_path = To_TString(filePath);
 	const auto path = const_cast<LPTSTR>(s_path.c_str());
 	hMmio = mmioOpen(path, NULL, MMIO_ALLOCBUF | MMIO_READ);
 
-	/*! Wavファイルの読み込み失敗 */
+	/*! Waveファイルの読み込み失敗 */
 	if (hMmio == NULL) {
 		std::string error = "\"" + filePath + "\" is not load in sound!";
 		ErrorLog(error);
@@ -114,7 +114,7 @@ bool Wav::Load(std::string filePath)
 /*!
 	@brief	ファイナライズ
 */
-void Wav::Finalize() 
+void Wave::Finalize() 
 {
 	Release();/*!< メモリ開放 */
 }
@@ -122,7 +122,7 @@ void Wav::Finalize()
 /*!
 	@brief	解放
 */
-void Wav::Release()
+void Wave::Release()
 {
 	SAFE_DELETE(m_pWaveBuffer);
 }
@@ -132,7 +132,7 @@ void Wav::Release()
 	@detail		一時停止、停止後の"再生"もこれを使う
 	@param[in]	ループフラグ
 */
-void Wav::Play(bool isLoop)
+void Wave::Play(bool isLoop)
 {
 	/*! サブミット */
 	XAUDIO2_BUFFER buffer = { 0 };
@@ -163,7 +163,7 @@ void Wav::Play(bool isLoop)
 /*!
 	@brief	停止
 */
-void Wav::Stop()
+void Wave::Stop()
 {
 	m_pSourceVoice->Stop(0, XAUDIO2_COMMIT_NOW);
 	m_pSourceVoice->FlushSourceBuffers();
@@ -172,7 +172,7 @@ void Wav::Stop()
 /*!
 	@brief	一時停止
 */
-void API::Wav::Pause()
+void API::Wave::Pause()
 {
 	m_pSourceVoice->Stop(0, XAUDIO2_COMMIT_NOW);
 }
@@ -183,12 +183,12 @@ void API::Wav::Pause()
 	@detail		範囲 0～1
 	@param[in]	設定する音量
 */
-void API::Wav::SetVolume(float vol)
+void API::Wave::SetVolume(float vol)
 {
 	m_pSourceVoice->SetVolume(vol);
 }
 
-const float API::Wav::GetVolume() const
+const float API::Wave::GetVolume() const
 {
 	return 0.0f;
 }

@@ -8,10 +8,10 @@
 #pragma once
 #include <string>
 #include <D3D11.h>
-#include "../../../../Shader/ShaderBase/StructShaderBase.h"
+#include "../ShaderBase/StructShaderBase.h"
 //#include "../Shader/ShaderManager.h"
 #include <DirectXMath.h>
-#include "../../ApplicationProgrammingInterface.h"
+#include "../API/ApplicationProgrammingInterface.h"
 #include "../IRenderer/IRenderer.h"
 #include "../Texture/Texture.h"
 

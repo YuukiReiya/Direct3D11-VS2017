@@ -6,11 +6,11 @@
 */
 #include <D3D11.h>
 #include "Sprite.h"
-#include "../../../../Direct3D11/Direct3D11.h"
-#include "../../../../MyGame.h"
-#include "../../../../MemoryLeaks.h"
-#include "../../../../Camera/Camera.h"
-#include "../../../../Shader/ShaderManager/ShaderManager.h"
+#include "../Direct3D11/Direct3D11.h"
+#include "../MyGame.h"
+#include "../MemoryLeaks.h"
+#include "../Camera/Camera.h"
+#include "../ShaderManager/ShaderManager.h"
 
 /*!
 	@brief	–¼‘O‹óŠÔ

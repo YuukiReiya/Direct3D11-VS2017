@@ -9,7 +9,7 @@
 #include <D3D11.h>
 #include <unordered_map>
 #include <wrl/client.h>
-#include "../../Singleton/Singleton.h"
+#include "../Singleton/Singleton.h"
 
 #if defined DEBUG||_DEBUG
 # define DEBUG_SHADER

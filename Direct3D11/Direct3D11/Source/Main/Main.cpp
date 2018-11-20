@@ -10,7 +10,7 @@
 #include "../MyGame.h"
 #include "../MemoryLeaks.h"
 #include "../Audio/AudioDevice.h"
-#include "../Shader/ShaderManager/ShaderManager.h"
+#include "../ShaderManager/ShaderManager.h"
 #include "../Camera/Camera.h"
 
 

@@ -3,11 +3,11 @@
 #include <d3dcompiler.h>
 #include <string>
 
-#include "../../Direct3D11/Direct3D11.h"
+#include "../Direct3D11/Direct3D11.h"
 #include "ShaderManager.h"
-#include "../../MemoryLeaks.h"
-#include "../../MyGame.h"
-#include "../../FrameWork/API/Renderer/Sprite/Sprite.h"
+#include "../MemoryLeaks.h"
+#include "../MyGame.h"
+#include "../Sprite/Sprite.h"
 
 /*!
 	@brief	–¼‘O‹óŠÔ
