@@ -36,6 +36,12 @@
 */
 #define DEBUG_SPRITE
 
+/*!
+	@def	DEBUG_TEXTURE
+	@brief	テクスチャクラスのデバッグシンボル
+	@detail	テクスチャクラスのデバッグ処理の有効化
+*/
+#define DEBUG_TEXTURE
 
 #endif // _DEBUG
 

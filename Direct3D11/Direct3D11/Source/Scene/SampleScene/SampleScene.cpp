@@ -41,7 +41,6 @@ void SampleScene::Initialize()
 	//m_pTex2 = make_unique<Texture>();
 	//m_pSprite2 = make_unique<Sprite>();
 
-
 	m_pTex = make_unique<Texture>();
 	m_pSprite = make_unique<Sprite>();
 
@@ -61,6 +60,9 @@ void SampleScene::Initialize()
 	m_pWav2->Load("Resource/Sound/se.wav");
 	m_pWav2->Play(true);
 
+
+	m_pTexA = make_unique<TextureAtlas>();
+	//m_pTexA->Initialize()
 }
 
 /*!

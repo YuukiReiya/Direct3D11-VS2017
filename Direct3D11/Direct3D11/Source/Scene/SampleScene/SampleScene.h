@@ -10,6 +10,7 @@
 #include "../../Sprite/Sprite.h"
 #include "../../Texture/Texture.h"
 #include "../../Wave/Wave.h"
+#include "../../TextureAtlas/TextureAtlas.h"
 
 class SampleScene final
 	: public Scene
@@ -30,5 +31,7 @@ private:
 	std::unique_ptr<API::Sprite>m_pSprite2;
 	std::unique_ptr<API::Wave>m_pWav;
 	std::unique_ptr<API::Wave>m_pWav2;
+
+	std::unique_ptr<API::TextureAtlas>m_pTexA;
 };
 
