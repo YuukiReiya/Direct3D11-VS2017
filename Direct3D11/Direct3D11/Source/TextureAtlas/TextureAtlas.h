@@ -15,7 +15,7 @@
 namespace API {
 
 	class TextureAtlas :
-		public Base::ITexture
+		public ITexture
 	{
 	public:
 		/*!

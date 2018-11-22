@@ -15,7 +15,7 @@ using namespace DirectX;
 	@brief	コンストラクタ
 	@detail	メンバ変数の初期化を行う
 */
-API::Base::ITexture::ITexture() :
+API::ITexture::ITexture() :
 	m_pShaderResourceView(nullptr),
 	m_pSamplerState(nullptr),
 	m_eTileMode(TileMode::Clamp),
@@ -27,7 +27,7 @@ API::Base::ITexture::ITexture() :
 	@brief	仮想デストラクタ
 	@detail	空デストラクタ
 */
-API::Base::ITexture::~ITexture()
+API::ITexture::~ITexture()
 {
 }
 
@@ -38,7 +38,7 @@ API::Base::ITexture::~ITexture()
 			派生先でメンバが増えることを踏まえ、仮想関数として実装
 
 */
-void API::Base::ITexture::Finalize()
+void API::ITexture::Finalize()
 {
 	//m_pShaderResourceView.Reset();
 	//m_pSamplerState.Reset();
@@ -51,7 +51,7 @@ void API::Base::ITexture::Finalize()
 	@param[in]	設定するフィルタリング(アドレッシングモード)
 	@detail		サンプラーステートを作成
 */
-HRESULT API::Base::ITexture::SetTileAndFiltering(const TileMode tileMode, const FilteringMode filterMode)
+HRESULT API::ITexture::SetTileAndFiltering(const TileMode tileMode, const FilteringMode filterMode)
 {
 	/*! 引数の保持 */
 	m_eTileMode = tileMode;
@@ -87,7 +87,7 @@ HRESULT API::Base::ITexture::SetTileAndFiltering(const TileMode tileMode, const 
 	@param[in]	読み込むファイルのパス
 	@return		読み取り結果 成功:S_OK  失敗:E_FAIL
 */
-HRESULT API::Base::ITexture::Load(std::string filePath)
+HRESULT API::ITexture::Load(std::string filePath)
 {
 	HRESULT hr;
 

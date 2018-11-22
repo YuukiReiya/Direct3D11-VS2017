@@ -17,93 +17,85 @@
 */
 namespace API {
 
-	/*!
-		@namespace	Base
-		@brief		Base名前空間に含める
-	*/
-	namespace Base {
-
-		class ITexture abstract
+	class ITexture abstract
+	{
+	public:
+		/*!
+			@enum	TileMode
+			@brief	タイリングモードの設定
+		*/
+		enum TileMode
 		{
-		public:
-			/*!
-				@enum	TileMode
-				@brief	タイリングモードの設定
-			*/
-			enum TileMode 
-			{
-				/*! 繰り返し無し */
-				Clamp		= D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_CLAMP,			/*!< デフォルト */
-				Border		= D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER,			/*!< SAMPLER_DESCまたはHLSLで指定した境界色を設定 */
-				MirrorOnce	= D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_MIRROR_ONCE,
-				/*! タイリング */
-				Wrap		= D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP,			/*!< 繰り返し */
-				Mirror		= D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_MIRROR,			/*!< 繰り返し反転 */
+			/*! 繰り返し無し */
+			Clamp = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_CLAMP,			/*!< デフォルト */
+			Border = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_BORDER,			/*!< SAMPLER_DESCまたはHLSLで指定した境界色を設定 */
+			MirrorOnce = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_MIRROR_ONCE,
+			/*! タイリング */
+			Wrap = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP,			/*!< 繰り返し */
+			Mirror = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_MIRROR,			/*!< 繰り返し反転 */
 
-			};
-
-			/*!
-				@enum	FilteringMode 
-				@brief	フィルタリングモードの設定
-			*/
-			enum FilteringMode 
-			{
-				Point = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_POINT,			/*!< ポイントフィルタリング:最悪品質でコスパ良 */
-				Bilinear = D3D11_FILTER::D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT,	/*!< バイリニアテクスチャフィルタリング */
-				Trilinear = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_LINEAR,		/*!< トリリニアテクスチャフィルタリング:デフォルト設定 */
-				Anisotropic = D3D11_FILTER::D3D11_FILTER_ANISOTROPIC			/*!< 異方性フィルタリング:最高品質でコスパ悪 */
-			};
-
-			/*!
-				@brief	コンストラクタ
-			*/
-			ITexture();
-
-			/*!
-				@brief	仮想デストラクタ
-			*/
-			virtual ~ITexture();
-
-			/*!
-				@fn		ファイナライズ
-				@brief	破棄処理
-				@detail	メンバの明示的な開放
-						派生先でメンバが増えることを踏まえ、仮想関数として実装
-			*/
-			virtual void Finalize();
-
-			/*!
-				@fn		画像サイズのセッター
-				@brief	読み込む画像のサイズ
-			*/
-			inline void SetSize(const DirectX::XMINT2 size) {
-				m_Size = size;
-			}
-
-			/*!
-				@fn			タイリングモードとフィルタリングモードのセッター
-				@brief		タイリングモードとフィルタリングモードの設定
-				@param[in]	設定するタイルモード
-				@param[in]	設定するフィルタリング(アドレッシングモード)
-				@detail		サンプラーステートを作成
-			*/
-			HRESULT SetTileAndFiltering(const TileMode tileMode, const FilteringMode filterMode);
-		protected:
-			TileMode		m_eTileMode;	/*!< タイリングモード */
-			FilteringMode	m_eFilterMode;	/*!< フィルタリングモード */
-			DirectX::XMINT2 m_Size;			/*!< 画像サイズ */
-			Microsoft::WRL::ComPtr<ID3D11SamplerState>		m_pSamplerState;		/*!< サンプラーステート */
-			Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pShaderResourceView;	/*!< シェーダーリソースビュー(SRV) */
-
-			/*!
-				@fn			画像の読み込み
-				@brief		画像の読み込みを行いSRVを作成
-				@detail		WICを使い画像データを読み込み、SRVを作成、メンバ変数にバインド
-				@param[in]	読み込むファイルのパス
-				@return		読み取り結果 成功:S_OK  失敗:E_FAIL
-			*/
-			HRESULT Load(std::string filePath);
 		};
 
-	}
+		/*!
+			@enum	FilteringMode
+			@brief	フィルタリングモードの設定
+		*/
+		enum FilteringMode
+		{
+			Point = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_POINT,			/*!< ポイントフィルタリング:最悪品質でコスパ良 */
+			Bilinear = D3D11_FILTER::D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT,	/*!< バイリニアテクスチャフィルタリング */
+			Trilinear = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_LINEAR,		/*!< トリリニアテクスチャフィルタリング:デフォルト設定 */
+			Anisotropic = D3D11_FILTER::D3D11_FILTER_ANISOTROPIC			/*!< 異方性フィルタリング:最高品質でコスパ悪 */
+		};
+
+		/*!
+			@brief	コンストラクタ
+		*/
+		ITexture();
+
+		/*!
+			@brief	仮想デストラクタ
+		*/
+		virtual ~ITexture();
+
+		/*!
+			@fn		ファイナライズ
+			@brief	破棄処理
+			@detail	メンバの明示的な開放
+					派生先でメンバが増えることを踏まえ、仮想関数として実装
+		*/
+		virtual void Finalize();
+
+		/*!
+			@fn		画像サイズのセッター
+			@brief	読み込む画像のサイズ
+		*/
+		inline void SetSize(const DirectX::XMINT2 size) {
+			m_Size = size;
+		}
+
+		/*!
+			@fn			タイリングモードとフィルタリングモードのセッター
+			@brief		タイリングモードとフィルタリングモードの設定
+			@param[in]	設定するタイルモード
+			@param[in]	設定するフィルタリング(アドレッシングモード)
+			@detail		サンプラーステートを作成
+		*/
+		HRESULT SetTileAndFiltering(const TileMode tileMode, const FilteringMode filterMode);
+	protected:
+		TileMode		m_eTileMode;	/*!< タイリングモード */
+		FilteringMode	m_eFilterMode;	/*!< フィルタリングモード */
+		DirectX::XMINT2 m_Size;			/*!< 画像サイズ */
+		Microsoft::WRL::ComPtr<ID3D11SamplerState>		m_pSamplerState;		/*!< サンプラーステート */
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pShaderResourceView;	/*!< シェーダーリソースビュー(SRV) */
+
+		/*!
+			@fn			画像の読み込み
+			@brief		画像の読み込みを行いSRVを作成
+			@detail		WICを使い画像データを読み込み、SRVを作成、メンバ変数にバインド
+			@param[in]	読み込むファイルのパス
+			@return		読み取り結果 成功:S_OK  失敗:E_FAIL
+		*/
+		HRESULT Load(std::string filePath);
+	};
 }
