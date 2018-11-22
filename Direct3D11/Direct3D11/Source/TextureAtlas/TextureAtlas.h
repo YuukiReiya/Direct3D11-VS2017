@@ -41,6 +41,17 @@ namespace API {
 		/*!
 			@fn			イニシャライズ
 			@brief		初期化
+			@detail		画像の読み込みと画像サイズの指定、分割数の指定を行い、サンプラーステートの作成を行う
+			@param[in]	画像のパス
+			@param[in]	画像サイズ
+			@param[in]	分割数(x,y)
+			@return		成功:S_OK 失敗:E_FAIL
+		*/
+		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum);
+
+		/*!
+			@fn			イニシャライズ
+			@brief		初期化
 			@detail		画像の読み込みと分割数の指定を行い、サンプラーステートの作成を行う
 			@param[in]	画像のパス
 			@param[in]	分割数(x,y)
@@ -48,6 +59,19 @@ namespace API {
 			@return		成功:S_OK 失敗:E_FAIL
 		*/
 		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 divNum, const TileMode tileMode);
+
+		/*!
+			@fn			イニシャライズ
+			@brief		初期化
+			@detail		画像の読み込みと画像サイズの指定、分割数の指定を行い、サンプラーステートの作成を行う
+			@param[in]	画像のパス
+			@param[in]	画像サイズ
+			@param[in]	分割数(x,y)
+			@param[in]	タイリングモードの設定
+			@return		成功:S_OK 失敗:E_FAIL
+		*/
+		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum, const TileMode tileMode);
+
 
 		/*!
 			@fn			イニシャライズ
@@ -63,6 +87,19 @@ namespace API {
 		/*!
 			@fn			イニシャライズ
 			@brief		初期化
+			@detail		画像の読み込みと画像サイズの指定、分割数の指定を行い、サンプラーステートの作成を行う
+			@param[in]	画像のパス
+			@param[in]	画像サイズ
+			@param[in]	分割数(x,y)
+			@param[in]	フィルタリングモードの設定
+			@return		成功:S_OK 失敗:E_FAIL
+		*/
+		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum, const FilteringMode filterMode);
+
+
+		/*!
+			@fn			イニシャライズ
+			@brief		初期化
 			@detail		画像の読み込みと分割数の指定を行い、サンプラーステートの作成を行う
 			@param[in]	画像のパス
 			@param[in]	分割数(x,y)
@@ -71,6 +108,19 @@ namespace API {
 			@return		成功:S_OK 失敗:E_FAIL
 		*/
 		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 divNum, const TileMode tileMode, const FilteringMode filterMode);
+
+		/*!
+			@fn			イニシャライズ
+			@brief		初期化
+			@detail		画像の読み込みと画像サイズの指定、分割数の指定を行い、サンプラーステートの作成を行う
+			@param[in]	画像のパス
+			@param[in]	画像サイズ
+			@param[in]	分割数(x,y)
+			@param[in]	タイリングモードの設定
+			@param[in]	フィルタリングモードの設定
+			@return		成功:S_OK 失敗:E_FAIL
+	*/
+		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum, const TileMode tileMode, const FilteringMode filterMode);
 
 		/*!
 			@fn		ファイナライズ

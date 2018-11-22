@@ -3,6 +3,7 @@
 #include "../MyGame.h"
 #include "../MemoryLeaks.h"
 #include "../WindowsImagingComponent/WICTextureLoader.h"
+#include "../Debug/Debug.h"
 
 /*!
 	@brief	名前空間
@@ -42,6 +43,49 @@ void API::ITexture::Finalize()
 {
 	//m_pShaderResourceView.Reset();
 	//m_pSamplerState.Reset();
+}
+
+/*!
+	@fn			画像サイズのセッター
+	@brief		読み込む画像のサイズの設定
+	@param[in]	画像サイズ
+	@return		成功:true 失敗:false
+*/
+bool API::ITexture::SetSize(const DirectX::XMINT2 size)
+{
+#ifdef DEBUG_TEXTURE
+	/*!
+	*	画像サイズは頂点生成に使用する。
+	*	負数で生成した場合、UVが反転するのだが
+	*	今回は反転して描画するための関数を用意するため
+	*	サイズで0以下が指定した場合にエラーを吐くようにする。
+	*/
+	try
+	{
+		std::string error;
+
+		/*! 画像の幅をチェック */
+		if (size.x <= 0) {
+			error = "texture size.x is less than Zero!\n\
+			size.x =" + std::to_string(size.x) + " <= 0";
+			throw error;
+		}
+
+		/*! 画像の高さをチェック */
+		if (size.y <= 0) {
+			error = "texture size.x is less than Zero!\n\
+			size.x =" + std::to_string(size.x) + " <= 0";
+			throw error;
+		}
+	}
+	catch (std::string& error)
+	{
+		ErrorLog(error);
+		return false;
+	}
+#endif
+	m_Size = size;
+	return true;
 }
 
 /*!

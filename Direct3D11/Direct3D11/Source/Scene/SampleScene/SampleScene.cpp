@@ -48,17 +48,17 @@ void SampleScene::Initialize()
 	m_pSprite2 = make_unique<Sprite>();
 
 
-	m_pTex->Load("image.jpg", { 308,163 });
-	m_pSprite->Initialize();
-	m_pTex2->Load("test.png", { 256,256 });
-	m_pSprite2->Initialize();
+	//m_pTex->Load("image.jpg", { 308,163 });
+	//m_pSprite->Initialize();
+	//m_pTex2->Load("test.png", { 256,256 });
+	//m_pSprite2->Initialize();
 
-	m_pWav = make_unique<Wave>();
-	m_pWav->Load("07 フォーチュンナンバー0405.wav");
-	m_pWav->Play(true);
-	m_pWav2 = make_unique<Wave>();
-	m_pWav2->Load("Resource/Sound/se.wav");
-	m_pWav2->Play(true);
+	//m_pWav = make_unique<Wave>();
+	//m_pWav->Load("07 フォーチュンナンバー0405.wav");
+	//m_pWav->Play(true);
+	//m_pWav2 = make_unique<Wave>();
+	//m_pWav2->Load("Resource/Sound/se.wav");
+	//m_pWav2->Play(true);
 
 
 	m_pTexA = make_unique<TextureAtlas>();

@@ -67,12 +67,12 @@ namespace API {
 		virtual void Finalize();
 
 		/*!
-			@fn		画像サイズのセッター
-			@brief	読み込む画像のサイズ
+			@fn			画像サイズのセッター
+			@brief		読み込む画像のサイズの設定
+			@param[in]	画像サイズ
+			@return		成功:true 失敗:false
 		*/
-		inline void SetSize(const DirectX::XMINT2 size) {
-			m_Size = size;
-		}
+		bool SetSize(const DirectX::XMINT2 size);
 
 		/*!
 			@fn			タイリングモードとフィルタリングモードのセッター

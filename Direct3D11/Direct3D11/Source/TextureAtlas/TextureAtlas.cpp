@@ -45,6 +45,30 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 	@brief		初期化
 	@detail		画像の読み込みと分割数の指定を行い、サンプラーステートの作成を行う
 	@param[in]	画像のパス
+	@param[in]	画像サイズ
+	@param[in]	分割数(x,y)
+	@return		成功:S_OK 失敗:E_FAIL
+*/
+HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum)
+{
+	HRESULT hr;
+
+	/*! 初期化 */
+	hr = Initialize(filePath, divNum);
+	if (FAILED(hr)) {
+		return hr;
+	}
+
+	/*! サイズの設定 */
+	hr = SetSize(size) ? S_OK : E_FAIL;
+	return hr;
+}
+
+/*!
+	@fn			イニシャライズ
+	@brief		初期化
+	@detail		画像の読み込みと分割数の指定を行い、サンプラーステートの作成を行う
+	@param[in]	画像のパス
 	@param[in]	分割数(x,y)
 	@param[in]	タイリングモードの設定
 	@return		成功:S_OK 失敗:E_FAIL
@@ -59,6 +83,31 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 	@brief		初期化
 	@detail		画像の読み込みと分割数の指定を行い、サンプラーステートの作成を行う
 	@param[in]	画像のパス
+	@param[in]	画像サイズ
+	@param[in]	分割数(x,y)
+	@param[in]	タイリングモードの設定
+	@return		成功:S_OK 失敗:E_FAIL
+*/
+HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum, const TileMode tileMode)
+{
+	HRESULT hr;
+
+	/*! 初期化 */
+	hr = Initialize(filePath, divNum, tileMode);
+	if (FAILED(hr)) {
+		return hr;
+	}
+
+	/*! サイズの設定 */
+	hr = SetSize(size) ? S_OK : E_FAIL;
+	return hr;
+}
+
+/*!
+	@fn			イニシャライズ
+	@brief		初期化
+	@detail		画像の読み込みと分割数の指定を行い、サンプラーステートの作成を行う
+	@param[in]	画像のパス
 	@param[in]	分割数(x,y)
 	@param[in]	フィルタリングモードの設定
 	@return		成功:S_OK 失敗:E_FAIL
@@ -66,6 +115,31 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 divNum, const FilteringMode filterMode)
 {
 	return Initialize(filePath, divNum, m_eTileMode, filterMode);
+}
+
+/*!
+	@fn			イニシャライズ
+	@brief		初期化
+	@detail		画像の読み込みと分割数の指定を行い、サンプラーステートの作成を行う
+	@param[in]	画像のパス
+	@param[in]	画像サイズ
+	@param[in]	分割数(x,y)
+	@param[in]	フィルタリングモードの設定
+	@return		成功:S_OK 失敗:E_FAIL
+*/
+HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum, const FilteringMode filterMode)
+{
+	HRESULT hr;
+
+	/*! 初期化 */
+	hr = Initialize(filePath, divNum, filterMode);
+	if (FAILED(hr)) {
+		return hr;
+	}
+
+	/*! サイズの設定 */
+	hr = SetSize(size) ? S_OK : E_FAIL;
+	return hr;
 }
 
 /*!
@@ -111,6 +185,32 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 }
 
 /*!
+	@fn			イニシャライズ
+	@brief		初期化
+	@detail		画像の読み込みと分割数の指定を行い、サンプラーステートの作成を行う
+	@param[in]	画像のパス
+	@param[in]	画像サイズ
+	@param[in]	分割数(x,y)
+	@param[in]	タイリングモードの設定
+	@param[in]	フィルタリングモードの設定
+	@return		成功:S_OK 失敗:E_FAIL
+*/
+HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum, const TileMode tileMode, const FilteringMode filterMode)
+{
+	HRESULT hr;
+
+	/*! 初期化 */
+	hr = Initialize(filePath, divNum, tileMode, filterMode);
+	if (FAILED(hr)) {
+		return hr;
+	}
+
+	/*! サイズの設定 */
+	hr = SetSize(size) ? S_OK : E_FAIL;
+	return hr;
+}
+
+/*!
 	@fn		ファイナライズ
 	@brief	破棄処理
 	@detail	メンバの明示的な開放
@@ -136,14 +236,14 @@ void API::TextureAtlas::SetDevNum(const DirectX::XMINT2 divNum)
 		/*! xの範囲外チェック */
 		if (divNum.x <= 0) {
 			error = "divNum.x is less than Zero!\n\
-			divNum.x = " + std::to_string(divNum.x) + "< 0";
+			divNum.x = " + std::to_string(divNum.x) + " <= 0";
 			throw error;/*!< xの文化通数が0以下 */
 		}
 
 		/*! yの範囲外チェック */
 		if (divNum.y <= 0) {
 			error = "divNum.y is less than Zero!\n\
-			divNum.y = " + std::to_string(divNum.y) + "< 0";
+			divNum.y = " + std::to_string(divNum.y) + " <= 0";
 			throw error;/*!< yの文化通数が0以下 */
 		}
 

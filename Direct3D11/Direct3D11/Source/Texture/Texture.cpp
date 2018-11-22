@@ -5,179 +5,179 @@
 #include "../WindowsImagingComponent/WICTextureLoader.h"
 
 /*!
-	wincodec.hのCreateDecoderFromFilenameの引数がマルチバイト文字列の引数のため
-	UNICODE設定でもマルチバイト文字を使う必要がある
-*/
-
-/*!
 	@brief	名前空間
 	@detail	usingディレクティブ
 */
 using namespace D3D11;
-using namespace API;
 using namespace DirectX;
 
 
 /*!
 	@brief	コンストラクタ
+	@detail	生成時にITextureのコンストラクタを呼び出しデフォルト値を入れる
 */
-Texture::Texture()
+API::Texture::Texture() :ITexture()
 {
-	SecureZeroMemory(this, sizeof(this));
-	m_pSamplerState		= nullptr;
-	m_pResorceTexture	= nullptr;
-	m_eTileMode			= TileMode::Clamp;
-	m_eFilteringMode	= FilteringMode::Trilinear;
+
 }
 
 /*!
 	@brief	デストラクタ
+	@detail	Finalize呼び出し
 */
-Texture::~Texture()
+API::Texture::~Texture() 
 {
 	Finalize();
 }
 
 /*!
-	@brief	初期化
-	@detail	現在設定されているタイリングモードとフィルタリングモードを設定する
-*/
-HRESULT Texture::Initialize() 
-{
-	return SetTileAndFiltering(m_eTileMode, m_eFilteringMode);
-}
-
-/*!
+	@fn			イニシャライズ
 	@brief		初期化
-	@detail		タイリングモードを変更し、サンプラーを作りなおす
-	@param[in]	設定するタイリングモード
+	@param[in]	画像のパス
+	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT Texture::Initialize(TileMode tileMode)
+HRESULT API::Texture::Initialize(std::string filePath)
 {
-	return SetTileAndFiltering(tileMode, m_eFilteringMode);
+	return Initialize(filePath, m_eTileMode, m_eFilterMode);
 }
 
 /*!
+	@fn			イニシャライズ
 	@brief		初期化
-	@detail		フィルタリングモードを変更し、サンプラーを作りなおす
-	@param[in]	設定するフィルタリングモード
+	@param[in]	画像のパス
+	@param[in]	画像サイズ
+	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT Texture::Initialize(FilteringMode filteringMode)
+HRESULT API::Texture::Initialize(std::string filePath, const DirectX::XMINT2 size)
 {
-	return SetTileAndFiltering(m_eTileMode, filteringMode);
+	return Initialize(filePath, size, m_eTileMode, m_eFilterMode);
 }
 
 /*!
+	@fn			イニシャライズ
 	@brief		初期化
-	@detail		タイリングモードとフィルタリングモードを変更し、サンプラーを作りなおす
-	@param[in]	設定するタイリングモード
-	@param[in]	設定するフィルタリングモード
+	@detail		画像の読み込みとサンプラーステートの作成を行う
+	@param[in]	画像のパス
+	@param[in]	タイリングモードの設定
+	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT Texture::Initialize(TileMode tileMode, FilteringMode filteringMode)
+HRESULT API::Texture::Initialize(std::string filePath, const TileMode tileMode)
 {
-	return SetTileAndFiltering(tileMode, filteringMode);
+	return Initialize(filePath, tileMode, m_eFilterMode);
 }
 
 /*!
+	@fn			イニシャライズ
 	@brief		初期化
-	@detail		テクスチャのロードとサンプラーの生成を兼ねる
-	@param[in]	ロードするテクスチャのファイルパス
-	@param[in]	ロードする画像のサイズ
+	@detail		画像の読み込みと画像サイズの指定を行い、サンプラーステートの作成を行う
+	@param[in]	画像のパス
+	@param[in]	画像サイズ
+	@param[in]	タイリングモードの設定
+	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT API::Texture::Initialize(std::string filePath, DirectX::XMINT2 size)
+HRESULT API::Texture::Initialize(std::string filePath, const DirectX::XMINT2 size, const TileMode tileMode)
 {
-	return Load(filePath, size);
+	return Initialize(filePath, size, tileMode, m_eFilterMode);
+}
+
+
+/*!
+	@fn			イニシャライズ
+	@brief		初期化
+	@detail		画像の読み込みと画像サイズの指定を行い、サンプラーステートの作成を行う
+	@param[in]	画像のパス
+	@param[in]	フィルタリングモードの設定
+	@return		成功:S_OK 失敗:E_FAIL
+*/
+HRESULT API::Texture::Initialize(std::string filePath, const FilteringMode filterMode)
+{
+	return Initialize(filePath, m_eTileMode, filterMode);
 }
 
 /*!
-	@brief	テクスチャデータの読み込み
-	@detail	テクスチャデータの明示的なロード関数
+	@fn			イニシャライズ
+	@brief		初期化
+	@detail		画像の読み込みと画像サイズの指定を行い、サンプラーステートの作成を行う
+	@param[in]	画像のパス
+	@param[in]	画像サイズ
+	@param[in]	フィルタリングモードの設定
+	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT Texture::Load(std::string filePath, DirectX::XMINT2 size)
+HRESULT API::Texture::Initialize(std::string filePath, const DirectX::XMINT2 size, const FilteringMode filterMode)
+{
+	return Initialize(filePath, size, m_eTileMode, filterMode);
+}
+
+/*!
+	@fn			イニシャライズ
+	@brief		初期化
+	@detail		画像の読み込みと画像サイズの指定を行い、サンプラーステートの作成を行う
+	@param[in]	画像のパス
+	@param[in]	タイリングモードの設定
+	@param[in]	フィルタリングモードの設定
+	@return		成功:S_OK 失敗:E_FAIL
+*/
+HRESULT API::Texture::Initialize(std::string filePath, const TileMode tileMode, const FilteringMode filterMode)
 {
 	HRESULT hr;
 
-	/*! UNICODEとマルチバイト文字列の両対応用コード */
-	//auto s_path = To_TString(filePath);
-	//const auto path = const_cast<LPTSTR>(s_path.c_str());
-
-	/*! D3D11CompileFromFileの引数はマルチバイト */
-	auto tmp = To_WString(filePath);
-	auto path = const_cast<LPCWSTR>(tmp.c_str());
-
-
-	m_Size = size;
-
-	/*! サンプラーが生成されていなければ生成する */
-	if (!m_pSamplerState) {
-		SetTileAndFiltering(m_eTileMode, m_eFilteringMode);
-	}
-
-	/*! ローカル変数 */
-	ID3D11Resource* pResource = nullptr;
-
-	/*! テクスチャの生成 */
-	hr = CreateWICTextureFromFile(
-		Direct3D11::GetInstance().GetDevice(),
-		path,
-		&pResource,
-		m_pResorceTexture.GetAddressOf()
-	);
-
-	/*! ローカル変数のメモリ開放 */
-	if (pResource != nullptr) {
-		pResource->Release();
-	}
+	/*! 画像のロード */
+	hr = Load(filePath);
 	if (FAILED(hr)) {
 		std::string error = "\"" + filePath + "\" is not load in texture!";
 		ErrorLog(error);
 		return E_FAIL;
 	}
 
-	/*! 読み込みの正常終了 */
-	return S_OK;
-}
+	/*! タイリングモード */
+	m_eFilterMode = filterMode;
 
-/*!
-	@brief	ファイナライズ
-	@detail	COMポインタを使用しているのでResetの明示的な呼び出し
-*/
-void Texture::Finalize()
-{
-	m_pSamplerState.Reset();
-	m_pResorceTexture.Reset();
-}
+	/*! フィルタリングモード */
+	m_eTileMode = tileMode;
 
-/*!
-	@brief		タイリングモードとフィルタリングモードの設定
-	@param[in]	設定するタイルモード
-	@param[in]	設定するフィルタリング(アドレッシングモード)
-	@detail		サンプラーステートの作成
-*/
-HRESULT Texture::SetTileAndFiltering(TileMode tile, FilteringMode filter)
-{
-	/*! 引数の保持 */
-	m_eTileMode			= tile;
-	m_eFilteringMode	= filter;
-
-	/*! サンプラーステート設定 */
-	D3D11_SAMPLER_DESC sd;
-	SecureZeroMemory(&sd, sizeof(sd));
-	sd.Filter = static_cast<D3D11_FILTER>(m_eFilteringMode);			/*!< フィルタリング */
-	sd.AddressU = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(m_eTileMode);	/*!< アドレッシングモード */
-	sd.AddressV = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(m_eTileMode);	/*!< アドレッシングモード */
-	sd.AddressW = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(m_eTileMode);	/*!< アドレッシングモード */
-
-	HRESULT hr;
-	/*! サンプラー作成 */
-	hr= Direct3D11::GetInstance().GetDevice()->CreateSamplerState(
-		&sd,
-		m_pSamplerState.GetAddressOf()
-	);
+	/*! タイリングとフィルタリングを設定し、サンプラーステートを作成 */
+	hr = SetTileAndFiltering(m_eTileMode, m_eFilterMode);
 	if (FAILED(hr)) {
-		std::string error = "Sampler state is not created!";
+		std::string error = "\"" + filePath + "\" is not load in texture atlas!\n";
 		ErrorLog(error);
 		return E_FAIL;
 	}
+
 	return S_OK;
+}
+
+/*!
+	@fn			イニシャライズ
+	@brief		初期化
+	@detail		画像の読み込みと画像サイズの指定を行い、サンプラーステートの作成を行う
+	@param[in]	画像のパス
+	@param[in]	画像サイズ
+	@param[in]	タイリングモードの設定
+	@param[in]	フィルタリングモードの設定
+	@return		成功:S_OK 失敗:E_FAIL
+*/
+HRESULT API::Texture::Initialize(std::string filePath, const DirectX::XMINT2 size, const TileMode tileMode, const FilteringMode filterMode)
+{
+	HRESULT hr;
+
+	/*! 初期化 */
+	hr = Initialize(filePath, tileMode, filterMode);
+	if (FAILED(hr)) {
+		return hr;
+	}
+
+	/*! サイズの設定 */
+	hr = SetSize(size) ? S_OK : E_FAIL;
+	return hr;
+}
+
+/*!
+	@fn		ファイナライズ
+	@brief	破棄処理
+	@detail	メンバの明示的な開放
+*/
+void API::Texture::Finalize()
+{
+	/*! 抽象クラスのメンバの破棄 */
+	ITexture::Finalize();
 }

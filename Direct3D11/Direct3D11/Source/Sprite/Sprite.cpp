@@ -243,135 +243,135 @@ void Sprite::Release()
 */
 HRESULT Sprite::Render(Texture * pTexture, bool isReverse)
 {
-	/*! テクスチャデータの取得 */
-	auto size = pTexture->GetSize();				/*!< テクスチャサイズ */
-	auto pSampler = pTexture->GetSamplerState();	/*!< サンプラー */
-	auto pTex = pTexture->GetTexture();				/*!< テクスチャデータ */
+	///*! テクスチャデータの取得 */
+	//auto size = pTexture->GetSize();				/*!< テクスチャサイズ */
+	//auto pSampler = pTexture->GetSamplerState();	/*!< サンプラー */
+	//auto pTex = pTexture->GetTexture();				/*!< テクスチャデータ */
 
-	auto large = size.x < size.y ? size.y : size.x;
+	//auto large = size.x < size.y ? size.y : size.x;
 
-	HRESULT hr;
+	//HRESULT hr;
 
-	/*! 頂点を生成しデバイス側にバインド */
-	hr = CreateVertex(size);
-	if (FAILED(hr)) {
-		std::string error = "Create vertex is failed!";
-		ErrorLog(error);
-		return E_FAIL;
-	}
+	///*! 頂点を生成しデバイス側にバインド */
+	//hr = CreateVertex(size);
+	//if (FAILED(hr)) {
+	//	std::string error = "Create vertex is failed!";
+	//	ErrorLog(error);
+	//	return E_FAIL;
+	//}
 
-	CreateAlphaBlendState();
+	//CreateAlphaBlendState();
 
-	/*! トポロジーセット */
-	Direct3D11::GetInstance().GetDeviceContext()->IASetPrimitiveTopology(
-		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
-	);
+	///*! トポロジーセット */
+	//Direct3D11::GetInstance().GetDeviceContext()->IASetPrimitiveTopology(
+	//	D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
+	//);
 
-	auto shaderData = ShaderManager::GetInstance().GetShaderData(m_szShaderDataUsage);
+	//auto shaderData = ShaderManager::GetInstance().GetShaderData(m_szShaderDataUsage);
 
-	/*! 頂点インプットレイアウトセット */
-	Direct3D11::GetInstance().GetDeviceContext()->IASetInputLayout(shaderData->m_pVertexLayout.Get());
+	///*! 頂点インプットレイアウトセット */
+	//Direct3D11::GetInstance().GetDeviceContext()->IASetInputLayout(shaderData->m_pVertexLayout.Get());
 
-	/*! シェーダーの登録 */
-	Direct3D11::GetInstance().GetDeviceContext()->VSSetShader(shaderData->m_pVertexShader.Get(), NULL, NULL);
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetShader(shaderData->m_pPixelShader.Get(), NULL, NULL);
+	///*! シェーダーの登録 */
+	//Direct3D11::GetInstance().GetDeviceContext()->VSSetShader(shaderData->m_pVertexShader.Get(), NULL, NULL);
+	//Direct3D11::GetInstance().GetDeviceContext()->PSSetShader(shaderData->m_pPixelShader.Get(), NULL, NULL);
 
-	/*! コンスタントバッファの登録 */
-	Direct3D11::GetInstance().GetDeviceContext()->VSSetConstantBuffers(0, 1, shaderData->m_pConstantBuffer.GetAddressOf());
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetConstantBuffers(0, 1, shaderData->m_pConstantBuffer.GetAddressOf());
+	///*! コンスタントバッファの登録 */
+	//Direct3D11::GetInstance().GetDeviceContext()->VSSetConstantBuffers(0, 1, shaderData->m_pConstantBuffer.GetAddressOf());
+	//Direct3D11::GetInstance().GetDeviceContext()->PSSetConstantBuffers(0, 1, shaderData->m_pConstantBuffer.GetAddressOf());
 
-	/*! テクスチャ */
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetSamplers(0, 1, pSampler);
-	Direct3D11::GetInstance().GetDeviceContext()->PSSetShaderResources(0, 1, pTex);
+	///*! テクスチャ */
+	//Direct3D11::GetInstance().GetDeviceContext()->PSSetSamplers(0, 1, pSampler);
+	//Direct3D11::GetInstance().GetDeviceContext()->PSSetShaderResources(0, 1, pTex);
 
-	/*! 座標変換 */
-	DirectX::XMMATRIX mWorld, mTran, mRot, mScale;
-	mWorld = DirectX::XMMatrixIdentity();
-	mTran = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
-	mRot = DirectX::XMMatrixRotationRollPitchYaw(m_Rot.x, m_Rot.y, m_Rot.z);
-	mScale = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, c_ScaleZ);
+	///*! 座標変換 */
+	//DirectX::XMMATRIX mWorld, mTran, mRot, mScale;
+	//mWorld = DirectX::XMMatrixIdentity();
+	//mTran = DirectX::XMMatrixTranslation(m_Pos.x, m_Pos.y, m_Pos.z);
+	//mRot = DirectX::XMMatrixRotationRollPitchYaw(m_Rot.x, m_Rot.y, m_Rot.z);
+	//mScale = DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, c_ScaleZ);
 
-	/*! ワールド変換 */
-	mWorld = mScale*mRot*mTran;
+	///*! ワールド変換 */
+	//mWorld = mScale*mRot*mTran;
 
-	/*! マッピング用変数宣言 */
-	D3D11_MAPPED_SUBRESOURCE pData;
-	SecureZeroMemory(&pData, sizeof(pData));
+	///*! マッピング用変数宣言 */
+	//D3D11_MAPPED_SUBRESOURCE pData;
+	//SecureZeroMemory(&pData, sizeof(pData));
 
-	/*! シェーダー側に渡すコンスタントバッファ宣言 */
-	SpriteShaderBuffer cb;
-	SecureZeroMemory(&cb, sizeof(cb));
+	///*! シェーダー側に渡すコンスタントバッファ宣言 */
+	//SpriteShaderBuffer cb;
+	//SecureZeroMemory(&cb, sizeof(cb));
 
-	/*! バッファへのアクセス許可(書き換え) */
-	hr = Direct3D11::GetInstance().GetDeviceContext()->Map(
-		shaderData->m_pConstantBuffer.Get(),
-		NULL,
-		D3D11_MAP_WRITE_DISCARD,
-		NULL,
-		&pData
-	);
-	if (FAILED(hr)) {
-		std::string error = "Texture mapping is failed!";
-		ErrorLog(error);
-		Direct3D11::GetInstance().GetDeviceContext()->Unmap(shaderData->m_pConstantBuffer.Get(), NULL);/*!< アクセス権を閉じて抜ける */
-		return E_FAIL;
-	}
+	///*! バッファへのアクセス許可(書き換え) */
+	//hr = Direct3D11::GetInstance().GetDeviceContext()->Map(
+	//	shaderData->m_pConstantBuffer.Get(),
+	//	NULL,
+	//	D3D11_MAP_WRITE_DISCARD,
+	//	NULL,
+	//	&pData
+	//);
+	//if (FAILED(hr)) {
+	//	std::string error = "Texture mapping is failed!";
+	//	ErrorLog(error);
+	//	Direct3D11::GetInstance().GetDeviceContext()->Unmap(shaderData->m_pConstantBuffer.Get(), NULL);/*!< アクセス権を閉じて抜ける */
+	//	return E_FAIL;
+	//}
 
-	/*! コンスタントバッファにデータを送る */
-	auto camera = &Camera::GetInstance();
-	DirectX::XMMATRIX m = mWorld*camera->GetViewMatrix()*camera->GetProjMatrix();
-	m = DirectX::XMMatrixTranspose(m);	/*!< 転置行列 */
-	cb.m_WVP = m;						/*!< ワールド行列 */
+	///*! コンスタントバッファにデータを送る */
+	//auto camera = &Camera::GetInstance();
+	//DirectX::XMMATRIX m = mWorld*camera->GetViewMatrix()*camera->GetProjMatrix();
+	//m = DirectX::XMMatrixTranspose(m);	/*!< 転置行列 */
+	//cb.m_WVP = m;						/*!< ワールド行列 */
 
-	cb.m_Color = m_Color;
-	cb.m_Alpha = m_Alpha;
+	//cb.m_Color = m_Color;
+	//cb.m_Alpha = m_Alpha;
 
-	/*! メモリコピー */
-	memcpy_s(pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb));
+	///*! メモリコピー */
+	//memcpy_s(pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb));
 
-	/*! アクセス許可終了 */
-	Direct3D11::GetInstance().GetDeviceContext()->Unmap(shaderData->m_pConstantBuffer.Get(), NULL);
+	///*! アクセス許可終了 */
+	//Direct3D11::GetInstance().GetDeviceContext()->Unmap(shaderData->m_pConstantBuffer.Get(), NULL);
 
-	/*! 頂点バッファセット */
-	uint32_t stride = sizeof(SpriteVertex);
-	uint32_t offset = 0;
-	Direct3D11::GetInstance().GetDeviceContext()->IASetVertexBuffers(
-		0,
-		1,
-		m_pVertexBuffer.GetAddressOf(),
-		&stride,
-		&offset
-	);
+	///*! 頂点バッファセット */
+	//uint32_t stride = sizeof(SpriteVertex);
+	//uint32_t offset = 0;
+	//Direct3D11::GetInstance().GetDeviceContext()->IASetVertexBuffers(
+	//	0,
+	//	1,
+	//	m_pVertexBuffer.GetAddressOf(),
+	//	&stride,
+	//	&offset
+	//);
 
-	/*! αブレンドの設定 */
-	/*! ステンシルマスク */
-	//Direct3D11::GetInstance().GetDeviceContext()->RSSetState
-	//無くても透過される…
+	///*! αブレンドの設定 */
+	///*! ステンシルマスク */
+	////Direct3D11::GetInstance().GetDeviceContext()->RSSetState
+	////無くても透過される…
+	////uint32_t blendColor= 0xffffffff;
+	////Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(
+	////	m_pBlendState.Get(),
+	////	NULL,
+	////	//m_StencilMask
+	////	blendColor
+	////);
+
+
+	///*! 透過色 */
 	//uint32_t blendColor= 0xffffffff;
 	//Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(
 	//	m_pBlendState.Get(),
 	//	NULL,
-	//	//m_StencilMask
 	//	blendColor
 	//);
 
+	///*! 描画 */
+	//Direct3D11::GetInstance().GetDeviceContext()->Draw(
+	//	4,		/*!< 頂点数(板ポリゴンなので頂点数は4つ) */
+	//	NULL
+	//);
 
-	/*! 透過色 */
-	uint32_t blendColor= 0xffffffff;
-	Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(
-		m_pBlendState.Get(),
-		NULL,
-		blendColor
-	);
-
-	/*! 描画 */
-	Direct3D11::GetInstance().GetDeviceContext()->Draw(
-		4,		/*!< 頂点数(板ポリゴンなので頂点数は4つ) */
-		NULL
-	);
-
-	/*! αブレンド反映 */
-	Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(NULL, NULL, blendColor);
+	///*! αブレンド反映 */
+	//Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(NULL, NULL, blendColor);
 
 	return S_OK;
 }
@@ -500,6 +500,8 @@ HRESULT Sprite::CreateVertex(DirectX::XMINT2 size)
 	bd.Usage = D3D11_USAGE_DEFAULT;				/*!< GPUから読み込みと書き込みを許可 */
 	bd.ByteWidth = sizeof(vertices);			/*!< バッファのサイズ */
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;	/*!< 頂点バッファとしてレンダリングパイプラインにバインド */
+	//bd.CPUAccessFlags = map
+	//bd.Usage
 
 	/*! サブリソースのデータを定義 */
 	D3D11_SUBRESOURCE_DATA subResourceData;
@@ -608,7 +610,7 @@ HRESULT Sprite::CreateClampVertex(DirectX::XMINT2 size)
 	bd.ByteWidth = sizeof(vertices);			/*!< バッファのサイズ */
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;	/*!< 頂点バッファとしてレンダリングパイプラインにバインド */
 
-												/*! サブリソースのデータを定義 */
+	/*! サブリソースのデータを定義 */
 	D3D11_SUBRESOURCE_DATA subResourceData;
 	SecureZeroMemory(&subResourceData, sizeof(subResourceData));
 	subResourceData.pSysMem = vertices;			/*!< 初期化データへのポインタ */
