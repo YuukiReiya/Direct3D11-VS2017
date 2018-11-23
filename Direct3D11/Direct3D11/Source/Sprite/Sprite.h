@@ -22,9 +22,9 @@
 
 /*! APIの名前空間に含める */
 namespace API{
-		/*!
-			スプライトを扱うクラス
-		*/
+	/*!
+		スプライトを扱うクラス
+	*/
 	class Sprite
 		:public API::IAPI
 		{
@@ -118,6 +118,8 @@ namespace D3D11 {
 		struct SpriteShaderBuffer
 			:CONSTANT_BUFFER_BASE
 		{
+			ALIGN16<DirectX::XMINT2>	m_DivNum;
+			ALIGN16<DirectX::XMINT2>	m_Index;
 			ALIGN16<DirectX::XMFLOAT3>	m_Color;	/*< カラー */
 			ALIGN16<float>				m_Alpha;	/*< アルファ値 */
 		};

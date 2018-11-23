@@ -77,12 +77,13 @@ void SampleScene::Finalize()
 /*!
 	@brief	XV
 */
+#include <iostream>
 Scene * SampleScene::Update(SceneRoot * root)
 {
 	Keyboard::Update();
 
 	auto pos = m_pSprite.get()->GetPos();
-
+	auto tmp = pos;
 	pos.x -= Keyboard::GetButton('A') ? 0.1f : 0;
 	pos.x += Keyboard::GetButton('D') ? 0.1f : 0;
 
@@ -122,6 +123,6 @@ Scene * SampleScene::Update(SceneRoot * root)
 */
 void SampleScene::Render()
 {
-	m_pSprite2->Render(m_pTex2.get());
+	//m_pSprite2->Render(m_pTex2.get());
 	m_pSprite->Render(m_pTex.get());
 }

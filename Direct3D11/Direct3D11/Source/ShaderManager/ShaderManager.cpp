@@ -97,9 +97,9 @@ HRESULT ShaderManager::Initialize()
 		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		cb.ByteWidth = sizeof(SpriteShaderBuffer);
 		cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		cb.CPUAccessFlags = 0;
+		cb.CPUAccessFlags = 0;						//updateSubResource
 		cb.Usage = D3D11_USAGE_DYNAMIC;
-		cb.Usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;
+		cb.Usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;//updateSubResource
 
 		/*! コンスタントバッファ作成 */
 		hr = Direct3D11::GetInstance().GetDevice()->CreateBuffer(&cb, NULL, &m_pAddDataRef->m_pConstantBuffer);
