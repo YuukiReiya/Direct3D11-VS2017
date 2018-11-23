@@ -318,7 +318,7 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 
 	/*! ワールド変換 */
 	mWorld = mScale*mRot*mTran;
-	mWorld = DirectX::XMMatrixTranspose(mWorld);
+	//mWorld = DirectX::XMMatrixTranspose(mWorld);
 
 	/*! マッピング用変数宣言 */
 	D3D11_MAPPED_SUBRESOURCE pData;
@@ -333,11 +333,15 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	//D3D11_SUBRESOURCE_DATA data;
 
 	auto camera = &Camera::GetInstance();
+	DirectX::XMMATRIX m = mWorld * camera->GetViewMatrix()*camera->GetProjMatrix();
+	m = DirectX::XMMatrixTranspose(m);	/*!< 転置行列 */
+	cb.m_WVP = m;						/*!< ワールド行列 */
 
-	cb.m_WorldMatrix = mWorld;
-	cb.m_ViewMatrix = DirectX::XMMatrixIdentity();
-	cb.m_ViewMatrix = camera->GetViewMatrix();
-	cb.m_ProjectionMatrix = camera->GetProjMatrix();
+
+	//cb.m_WorldMatrix = mWorld;
+	//cb.m_ViewMatrix = DirectX::XMMatrixIdentity();
+	//cb.m_ViewMatrix = camera->GetViewMatrix();
+	//cb.m_ProjectionMatrix = camera->GetProjMatrix();
 	cb.m_DivNum = { 1,1 };
 	cb.m_Index = { 0,0 };
 	cb.m_Color = m_Color;
