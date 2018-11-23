@@ -48,9 +48,9 @@ void SampleScene::Initialize()
 	m_pSprite2 = make_unique<Sprite>();
 
 
-	//m_pTex->Load("image.jpg", { 308,163 });
+	m_pTex->Initialize("image.jpg", { 308,163 });
 	//m_pSprite->Initialize();
-	//m_pTex2->Load("test.png", { 256,256 });
+	m_pTex2->Initialize("test.png", { 256,256 });
 	//m_pSprite2->Initialize();
 
 	//m_pWav = make_unique<Wave>();
@@ -102,16 +102,16 @@ Scene * SampleScene::Update(SceneRoot * root)
 	m_pSprite.get()->SetRot(angle);
 
 
-	if (Keyboard::GetButtonDown(Keyboard::LEFT)) {
-		printf("aaka");
-		m_pWav->Pause();
-	}
-	else if (Keyboard::GetButtonDown(Keyboard::UP)) {
-		m_pWav->Play();
-	}
-	else if (Keyboard::GetButtonDown(Keyboard::RIGHT)) {
-		m_pWav->Stop();
-	}
+	//if (Keyboard::GetButtonDown(Keyboard::LEFT)) {
+	//	printf("aaka");
+	//	m_pWav->Pause();
+	//}
+	//else if (Keyboard::GetButtonDown(Keyboard::UP)) {
+	//	m_pWav->Play();
+	//}
+	//else if (Keyboard::GetButtonDown(Keyboard::RIGHT)) {
+	//	m_pWav->Stop();
+	//}
 
 
 	return this;
@@ -122,6 +122,6 @@ Scene * SampleScene::Update(SceneRoot * root)
 */
 void SampleScene::Render()
 {
-	m_pSprite->Render(m_pTex2.get());
+	m_pSprite2->Render(m_pTex2.get());
 	m_pSprite->Render(m_pTex.get());
 }

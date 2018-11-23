@@ -75,6 +75,15 @@ namespace API {
 		bool SetSize(const DirectX::XMINT2 size);
 
 		/*!
+			@fn			画像サイズのゲッター
+			@brief		画像サイズの取得
+			@detail		SetSizeで指定した画像のサイズを取得
+		*/
+		inline DirectX::XMINT2 GetSize()const { return m_Size; }
+
+		inline ID3D11SamplerState**GetSamplerState() { return m_pSamplerState.GetAddressOf(); }
+		inline ID3D11ShaderResourceView**GetShaderResourceView() { return m_pShaderResourceView.GetAddressOf(); }
+		/*!
 			@fn			タイリングモードとフィルタリングモードのセッター
 			@brief		タイリングモードとフィルタリングモードの設定
 			@param[in]	設定するタイルモード
@@ -97,5 +106,12 @@ namespace API {
 			@return		読み取り結果 成功:S_OK  失敗:E_FAIL
 		*/
 		HRESULT Load(std::string filePath);
+
+		/*!
+			@var	c_DefaultSize
+			@brief	デフォルトの画像サイズ
+			@detail	デフォルトで与えられている画像サイズ
+		*/
+		static const DirectX::XMINT2 c_DefaultSize;
 	};
 }

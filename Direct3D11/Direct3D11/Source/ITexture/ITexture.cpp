@@ -13,6 +13,14 @@ using namespace D3D11;
 using namespace DirectX;
 
 /*!
+	@var	c_DefaultSize
+	@brief	デフォルトの画像サイズ
+	@detail	デフォルトで与えられている画像サイズ
+			100×100をデフォルトの画像サイズに指定
+*/
+const DirectX::XMINT2 API::ITexture::c_DefaultSize = { 100,100 };
+
+/*!
 	@brief	コンストラクタ
 	@detail	メンバ変数の初期化を行う
 */
@@ -20,7 +28,8 @@ API::ITexture::ITexture() :
 	m_pShaderResourceView(nullptr),
 	m_pSamplerState(nullptr),
 	m_eTileMode(TileMode::Clamp),
-	m_eFilterMode(FilteringMode::Trilinear)
+	m_eFilterMode(FilteringMode::Trilinear),
+	m_Size(c_DefaultSize)
 {
 }
 

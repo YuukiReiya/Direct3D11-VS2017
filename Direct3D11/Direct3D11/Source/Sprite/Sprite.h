@@ -14,6 +14,7 @@
 #include "../API/ApplicationProgrammingInterface.h"
 #include "../IRenderer/IRenderer.h"
 #include "../Texture/Texture.h"
+#include "../TextureAtlas/TextureAtlas.h"
 
 #ifdef _DEBUG
 #define DEBUG_SPRITE
@@ -31,16 +32,12 @@ namespace API{
 			explicit Sprite();
 			~Sprite();
 
-			/*! 描画モード */
-			enum Mode {
-				Single,		/*!< ノーマルテクスチャ */
-				Multiple	/*!< アトラステクスチャ */
-			};
-
 			HRESULT IAPI::Initialize();
 			void IAPI::Finalize();
 			void Release();
-			HRESULT Render(Texture* pTexture, bool isReverse = false);
+			HRESULT Render(Texture* pTexture);
+			HRESULT Render(TextureAtlas* pTexture);
+			HRESULT Render(Texture* pTexture, bool isReverse /*= false*/);
 
 			DirectX::XMFLOAT3 GetPos()const { return m_Pos; }
 
@@ -61,7 +58,7 @@ namespace API{
 			static const float c_ScaleZ;
 			static const float c_VertexZ;
 			HRESULT CreateVertex(DirectX::XMINT2 size);
-
+			HRESULT CreateVertexAtlas(DirectX::XMINT2 size, DirectX::XMINT2 divNum);
 			HRESULT CreateClampVertex(DirectX::XMINT2 size);	/*!< 一枚絵タイリング/分割無し */
 			HRESULT CreateTilingVertex(DirectX::XMINT2 size);	/*!< タイリング用の頂点生成 */
 			HRESULT CreateSplitVertex(DirectX::XMINT2 size);	/*!< 分割用頂点生成 */
@@ -86,7 +83,6 @@ namespace API{
 			DirectX::XMINT2 m_DivNum;				/*!< テクスチャの分割数 */
 			DirectX::XMINT2 m_ActiveTextureIndex;	/*!< 使用するテクスチャのインデックス */
 			DirectX::XMFLOAT2 m_TilingRatio;		/*!< タイリングする際の割合 */
-			Mode m_eMode;
 			float m_Alpha;
 
 
