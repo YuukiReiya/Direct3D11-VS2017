@@ -37,14 +37,14 @@ SampleScene::~SampleScene()
 */
 void SampleScene::Initialize()
 {
-	//m_pTex = make_unique<Texture>();
+	m_pTex = make_unique<Texture>();
 	//m_pSprite = make_unique<Sprite>();
 	//m_pTex2 = make_unique<Texture>();
 	//m_pSprite2 = make_unique<Sprite>();
 
 	m_pSprite = make_unique<Sprite>();
 
-	//m_pTex->Initialize("image.jpg", { 308,163 });
+	m_pTex->Initialize("image.jpg", { 308,163 });
 	////m_pSprite->Initialize();
 	//m_pTex2->Initialize("test.png", { 256,256 });
 	//m_pSprite2->Initialize();
@@ -65,6 +65,7 @@ void SampleScene::Initialize()
 /*!
 	@brief	”jŠü
 */
+#include "../../Direct3D11/Direct3D11.h"
 void SampleScene::Finalize()
 {
 }
@@ -116,9 +117,9 @@ Scene * SampleScene::Update(SceneRoot * root)
 /*!
 	@brief	•`‰æ
 */
-#include "../../Direct3D11/Direct3D11.h"
 void SampleScene::Render()
 {
 	//m_pSprite2->Render(m_pTex2.get());
+	//m_pSprite->Render(m_pTex.get());
 	m_pSprite->Render(m_pTexA.get());
 }

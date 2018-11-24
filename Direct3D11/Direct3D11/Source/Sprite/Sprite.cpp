@@ -249,8 +249,8 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	const auto size = pTexture->GetSize();
 
 	/*! 異なるサイズのテクスチャが渡されたら頂点生成 */
-	if (m_Size.x != size.x || m_Size.y != size.y) {
-
+	//if (m_Size.x != size.x || m_Size.y != size.y) {
+	{
 		/*! 頂点バッファ生成 */
 		hr = CreateVertex(size);
 		if (FAILED(hr)) {
@@ -325,7 +325,7 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	mScale	= DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, c_ScaleZ);
 
 	/*! ワールド変換 */
-	mWorld = mScale*mRot*mTran;
+	mWorld = mScale * mRot * mTran;
 
 	/*! マッピング用変数宣言 */
 	D3D11_MAPPED_SUBRESOURCE pData;
@@ -350,8 +350,8 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 		return E_FAIL;
 	}
 
-	/*! コンスタントバッファにデータを送る */
 	auto camera = &Camera::GetInstance();
+	/*! コンスタントバッファにデータを送る */
 	DirectX::XMMATRIX m = mWorld*camera->GetViewMatrix()*camera->GetProjMatrix();
 	cb.m_WVP = m;						/*!< ワールド行列 */
 	cb.m_DivNum = { 1,1 };
@@ -363,7 +363,10 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	memcpy_s(pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb));
 	
 	/*! アクセス許可終了 */
-	Direct3D11::GetInstance().GetDeviceContext()->Unmap(shaderData->m_pConstantBuffer.Get(), NULL);
+	Direct3D11::GetInstance().GetDeviceContext()->Unmap(
+		shaderData->m_pConstantBuffer.Get(), 
+		NULL
+	);
 	
 	/*! 頂点バッファセット */
 	uint32_t stride = sizeof(SpriteVertex);
@@ -413,7 +416,7 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 		D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
 	);
 
-	auto shaderData = ShaderManager::GetInstance().GetShaderData(ShaderManager::c_szSimpleTextureShader);
+	auto shaderData = ShaderManager::GetInstance().GetShaderData(ShaderManager::c_szTextureAtlasShader);
 
 	/*! 頂点インプットレイアウトセット */
 	Direct3D11::GetInstance().GetDeviceContext()->IASetInputLayout(
@@ -694,6 +697,10 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 
 /*!
 	@brief	板ポリの頂点生成
+	//
+		こいつがメモリリークの原因
+	//
+
 */
 HRESULT Sprite::CreateVertex(DirectX::XMINT2 size)
 {
@@ -779,13 +786,14 @@ HRESULT Sprite::CreateVertex(DirectX::XMINT2 size)
 	bd.Usage = D3D11_USAGE_DEFAULT;				/*!< GPUから読み込みと書き込みを許可 */
 	bd.ByteWidth = sizeof(vertices);			/*!< バッファのサイズ */
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;	/*!< 頂点バッファとしてレンダリングパイプラインにバインド */
-	//bd.CPUAccessFlags = map
-	//bd.Usage
 
 	/*! サブリソースのデータを定義 */
 	D3D11_SUBRESOURCE_DATA subResourceData;
 	SecureZeroMemory(&subResourceData, sizeof(subResourceData));
 	subResourceData.pSysMem = vertices;			/*!< 初期化データへのポインタ */
+
+	/*! 頂点バッファの開放 */
+	m_pVertexBuffer.Reset();
 
 	HRESULT hr;
 
