@@ -64,7 +64,8 @@ namespace D3D11 {
 		public:
 			~ShaderManager();
 
-			static const std::string c_SpriteDefault;
+			static const std::string c_szSimpleTextureShader;
+			static const std::string c_szTextureAtlasShader;
 			static const std::string c_MeshDefault;
 
 			HRESULT AddNewShaderData(std::string szKeyName, ShaderData* pNewShaderData);	/*!< \‘¢‘Ì‚ðƒŠƒXƒg‚É’Ç‰Á“o˜^ */

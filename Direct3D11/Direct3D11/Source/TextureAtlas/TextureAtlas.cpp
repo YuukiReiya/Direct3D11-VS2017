@@ -255,3 +255,57 @@ void API::TextureAtlas::SetDevNum(const DirectX::XMINT2 divNum)
 #endif
 	m_DivNum = divNum;
 }
+
+/*!
+	@fn			描画インデックスのセッター
+	@brief		描画するアトラステクスチャのインデックスを設定。
+	@detail		アトラステクスチャの分割数より多い値は設定できません。
+	@param[in]	描画したいテクスチャ番号
+*/
+void API::TextureAtlas::SetAtlasIndex(const DirectX::XMINT2 index)
+{
+#ifdef DEBUG_TEXTURE
+	std::string error;
+	try
+	{
+		/*! xの範囲外チェック */
+		if (index.x < 0) {
+			error = "index.x is out-of-range\n\
+			index.x = " + std::to_string(index.x) + "\n" +
+			std::to_string(index.x) + " < 0";
+			throw error;
+		}
+
+		/*! xの範囲外チェック */
+		if (m_DivNum.x <= index.x) {
+			error = "index.x is out-of-range\n\
+			index.x = " + std::to_string(index.x) + "\n" +
+			std::to_string(index.x) + " < DivNum.x-1 = " + std::to_string(m_DivNum.x - 1);
+			throw error;
+		}
+
+		/*! yの範囲外チェック */
+		if (index.y < 0) {
+			error = "index.y is out-of-range\n\
+			index.y = " + std::to_string(index.y) + "\n" +
+			std::to_string(index.y) + " < 0";
+			throw error;
+		}
+
+		/*! yの範囲外チェック */
+		if (m_DivNum.y <= index.y) {
+			error = "index.y is out-of-range\n\
+			index.y = " + std::to_string(index.y) + "\n" +
+			std::to_string(index.y) + " < DivNum.y-1 = " + std::to_string(m_DivNum.y - 1);
+			throw error;
+		}
+
+	}
+	catch (const std::string error)
+	{
+		ErrorLog(error);
+		return;
+	}
+#endif // DEBUG_TEXTURE
+	m_Index = index;
+}

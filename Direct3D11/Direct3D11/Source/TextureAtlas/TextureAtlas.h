@@ -136,6 +136,31 @@ namespace API {
 		*/
 		void SetDevNum(const DirectX::XMINT2 divNum);
 
+		/*!
+			@fn			描画インデックスのセッター
+			@brief		描画するアトラステクスチャのインデックスを設定。
+			@detail		アトラステクスチャの分割数より多い値は設定できません。
+			@param[in]	描画したいテクスチャ番号
+		*/
+		void SetAtlasIndex(const DirectX::XMINT2 index);
+
+		/*!
+			@fn		分割数のゲッター
+			@brief	分割数の取得
+			@detail	設定した分割数を取得する
+		*/
+		inline DirectX::XMINT2 GetDivNum()const {
+			return m_DivNum;
+		}
+
+		/*!
+			@fn		描画インデックスのゲッター
+			@brief	描画するアトラステクスチャのインデックス取得
+			@detail	分割したテクスチャの描画場所を取得
+		*/
+		inline DirectX::XMINT2 GetAtlasIndex()const {
+			return m_Index;
+		}
 	private:
 		DirectX::XMINT2 m_DivNum;	/*!< 分割数 */
 		DirectX::XMINT2 m_Index;	/*!< 描画するテクスチャ番号 */

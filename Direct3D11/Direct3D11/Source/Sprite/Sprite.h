@@ -35,8 +35,26 @@ namespace API{
 			HRESULT IAPI::Initialize();
 			void IAPI::Finalize();
 			void Release();
+
+			/*!
+				@fn			テクスチャの描画
+				@brief		シンプルテクスチャの描画
+				@detail		map,unmapを使ってテクスチャマッピングをする描画
+				@param[in]	描画するテクスチャ
+				@return		成功:S_OK 失敗:E_FAIL
+			*/
 			HRESULT Render(Texture* pTexture);
+
+			/*!
+				@fn			テクスチャの描画
+				@brief		アトラステクスチャの描画
+				@detail		SubResourceを使ってUpdateSubResourceをする描画
+				@param[in]	描画するテクスチャ
+				@return		成功:S_OK 失敗:E_FAIL
+			*/
 			HRESULT Render(TextureAtlas* pTexture);
+
+
 			HRESULT Render(Texture* pTexture, bool isReverse /*= false*/);
 
 			DirectX::XMFLOAT3 GetPos()const { return m_Pos; }
@@ -63,7 +81,6 @@ namespace API{
 			HRESULT CreateTilingVertex(DirectX::XMINT2 size);	/*!< タイリング用の頂点生成 */
 			HRESULT CreateSplitVertex(DirectX::XMINT2 size);	/*!< 分割用頂点生成 */
 
-			std::string m_szShaderDataUsage;
 			uint32_t	m_StencilMask;
 			Microsoft::WRL::ComPtr<ID3D11Buffer>		m_pVertexBuffer;
 			Microsoft::WRL::ComPtr<ID3D11BlendState>	m_pBlendState;
@@ -80,8 +97,7 @@ namespace API{
 			DirectX::XMFLOAT3 m_Color;
 
 			/*! スプライトの */
-			DirectX::XMINT2 m_DivNum;				/*!< テクスチャの分割数 */
-			DirectX::XMINT2 m_ActiveTextureIndex;	/*!< 使用するテクスチャのインデックス */
+			DirectX::XMINT2 m_Size;
 			DirectX::XMFLOAT2 m_TilingRatio;		/*!< タイリングする際の割合 */
 			float m_Alpha;
 

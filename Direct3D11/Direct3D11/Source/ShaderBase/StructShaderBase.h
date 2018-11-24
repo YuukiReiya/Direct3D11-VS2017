@@ -36,8 +36,7 @@ namespace D3D11 {
 			//ALIGN16<DirectX::XMMATRIX>m_WorldMatrix;		/*!< ワールド */
 			//ALIGN16<DirectX::XMMATRIX>m_ProjectionMatrix;	/*!< 射影行列 */
 			//ALIGN16<DirectX::XMMATRIX>m_ViewMatrix;			/*!< ビュー行列 */
-			ALIGN16<DirectX::XMMATRIX> m_WVP;/*< ワールド変換後の行列 */
-
+			ALIGN16<DirectX::XMMATRIX>m_WVP;
 		};
 	};
 };

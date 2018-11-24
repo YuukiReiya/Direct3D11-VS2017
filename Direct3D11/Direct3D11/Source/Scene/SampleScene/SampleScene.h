@@ -25,13 +25,13 @@ public:
 	void Render()override;
 
 private:
-	std::unique_ptr<API::Texture>m_pTex;
 	std::unique_ptr<API::Sprite>m_pSprite;
+	/*std::unique_ptr<API::Texture>m_pTex;
 	std::unique_ptr<API::Texture>m_pTex2;
 	std::unique_ptr<API::Sprite>m_pSprite2;
 	std::unique_ptr<API::Wave>m_pWav;
 	std::unique_ptr<API::Wave>m_pWav2;
-
+*/
 	std::unique_ptr<API::TextureAtlas>m_pTexA;
 };
 

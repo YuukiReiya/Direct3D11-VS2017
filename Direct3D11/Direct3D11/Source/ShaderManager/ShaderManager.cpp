@@ -19,7 +19,8 @@ using namespace D3D11::Graphic;
 /*!
 	@def	定数宣言
 */
-const std::string ShaderManager::c_SpriteDefault = "SPRITE_DEFAULT";/*!< スプライトシェーダーのデフォルト設定 */
+const std::string ShaderManager::c_szSimpleTextureShader = "SIMPLE_TEXTURE";/*!< シンプルテクスチャのシェーダー */
+const std::string ShaderManager::c_szTextureAtlasShader = "ATLAS_TEXTURE";	/*!< アトラステクスチャのシェーダー */
 const std::string ShaderManager::c_MeshDefault	 = "MESH_DEFAULT";	/*!< メッシュシェーダーのデフォルト設定 */
 const std::string c_ResourceHierarchy	= "Resource/Shader/";		/*!< シェーダーのリソースがおいてある階層までのパス */
 const std::string c_VertexProfile		= "vs";						/*!< 頂点シェーダー */
@@ -54,13 +55,13 @@ HRESULT ShaderManager::Initialize()
 	HRESULT hr;
 	ID3DBlob* pCompiledShader = NULL;/*!< コンパイル用ブロブ */
 
-	/*! スプライト用のデフォルト設定作成 */
+	/*! 単純テクスチャのシェーダー設定作成 */
 	m_pAddDataRef = new ShaderData;
 	{
 		/*! バーテックスシェーダーの作成 */
 		hr = MakeShader("DefaultSprite.hlsl", "VS", "vs_5_0", (void**)&m_pAddDataRef->m_pVertexShader, &pCompiledShader);
 		if (FAILED(hr)) {
-			ErrorLog("\"SpriteDefault\" vertex shader is not create!");
+			ErrorLog("\"SimpleTextureShader\" vertex shader is not create!");
 			return E_FAIL;
 		}
 
@@ -80,14 +81,14 @@ HRESULT ShaderManager::Initialize()
 			&m_pAddDataRef->m_pVertexLayout
 		);
 		if (FAILED(hr)) {
-			ErrorLog("\"SpriteDefault\" input layout is not create!");
+			ErrorLog("\"SimpleTextureShader\" input layout is not create!");
 			return E_FAIL;
 		}
 
 		/*! ピクセルシェーダーの作成 */
 		hr = ShaderManager::MakeShader("DefaultSprite.hlsl", "PS", "ps_5_0", (void**)&m_pAddDataRef->m_pPixelShader, &pCompiledShader);
 		if (FAILED(hr)) {
-			ErrorLog("\"SpriteDefault\" pixel shader is not create!");
+			ErrorLog("\"SimpleTextureShader\" pixel shader is not create!");
 			return E_FAIL;
 		}
 
@@ -97,21 +98,57 @@ HRESULT ShaderManager::Initialize()
 		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		cb.ByteWidth = sizeof(SpriteShaderBuffer);
 		cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		cb.CPUAccessFlags = 0;						//updateSubResource
 		cb.Usage = D3D11_USAGE_DYNAMIC;
-		cb.Usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;//updateSubResource
 
 		/*! コンスタントバッファ作成 */
 		hr = Direct3D11::GetInstance().GetDevice()->CreateBuffer(&cb, NULL, &m_pAddDataRef->m_pConstantBuffer);
 		if (FAILED(hr)) {
-			std::string error = "\"SpriteDefault\" ConstantBuffer is not create!";
+			std::string error = "\"SimpleTextureShader\" ConstantBuffer is not create!";
 			ErrorLog(error);
 			return E_FAIL;
 		}
 
 	}
-	AddNewShaderData(c_SpriteDefault, m_pAddDataRef);
+	AddNewShaderData(c_szSimpleTextureShader, m_pAddDataRef);
 	
+
+	/*! アトラステクスチャのシェーダー設定作成 */
+	m_pAddDataRef = new ShaderData;
+	{
+		/*!
+		*	・インプットレイアウト
+		*	・頂点シェーダー
+		*	・ピクセルシェーダー
+		*	この三つは単純なテクスチャのShaderと同じものを使う
+		*/
+
+		/*! インプットレイアウト */
+		m_pAddDataRef->m_pVertexLayout = m_pShaderDataUMap[c_szSimpleTextureShader]->m_pVertexLayout;
+
+		/*! 頂点シェーダー */
+		m_pAddDataRef->m_pVertexShader = m_pShaderDataUMap[c_szSimpleTextureShader]->m_pVertexShader;
+
+		/*! ピクセルシェーダー */
+		m_pAddDataRef->m_pPixelShader = m_pShaderDataUMap[c_szSimpleTextureShader]->m_pPixelShader;
+
+		/*! コンスタントバッファ定義 */
+		D3D11_BUFFER_DESC cb;
+		SecureZeroMemory(&cb, sizeof(cb));
+		cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cb.ByteWidth = sizeof(SpriteShaderBuffer);
+		cb.CPUAccessFlags = 0;						//updateSubResource
+		cb.Usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;//updateSubResource
+
+		/*! コンスタントバッファ作成 */
+		hr = Direct3D11::GetInstance().GetDevice()->CreateBuffer(&cb, NULL, &m_pAddDataRef->m_pConstantBuffer);
+		if (FAILED(hr)) {
+			std::string error = "\"TextureAtlasShader\" ConstantBuffer is not create!";
+			ErrorLog(error);
+			return E_FAIL;
+		}
+	}
+	AddNewShaderData(c_szTextureAtlasShader, m_pAddDataRef);
+
 	/*! ブロブの解放 */
 	pCompiledShader->Release();
 	pCompiledShader = NULL;
