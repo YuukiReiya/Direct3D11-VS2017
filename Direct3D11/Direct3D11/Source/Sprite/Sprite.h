@@ -63,8 +63,8 @@ namespace API{
 			void SetPos(DirectX::XMFLOAT2 pos);
 			void SetRot(DirectX::XMFLOAT3 rot) { m_Rot.x = rot.x, m_Rot.y = rot.y, m_Rot.z = rot.z; }
 			void SetScale(DirectX::XMFLOAT2 scale);
-			void SetSplitTexture(DirectX::XMINT2 divNum);/*!< テクスチャの分割 */
-			void SetActivateIndex(DirectX::XMINT2 index);/*!< 描画に使用するするテクスチャを変更 */
+			//void SetSplitTexture(DirectX::XMINT2 divNum);/*!< テクスチャの分割 */
+			//void SetActivateIndex(DirectX::XMINT2 index);/*!< 描画に使用するするテクスチャを変更 */
 			void SetAlpha(float alpha) { m_Alpha = alpha; }
 			void SetStencilMask(uint32_t mask) { m_StencilMask = mask; }
 

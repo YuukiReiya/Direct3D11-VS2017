@@ -81,8 +81,22 @@ namespace API {
 		*/
 		inline DirectX::XMINT2 GetSize()const { return m_Size; }
 
+		/*!
+			@fn			サンプラーステートのゲッター
+			@brief		サンプラーステートの取得
+			@detail		メンバのサンプラーステートのアドレス取得
+						※サンプラーステートはComPtr
+		*/
 		inline ID3D11SamplerState**GetSamplerState() { return m_pSamplerState.GetAddressOf(); }
+
+		/*!
+			@fn		シェーダーリソースビューのゲッター
+			@brief	シェーダーリソースビューの取得
+			@detail	メンバのシェーダーリソースビューのアドレス取得
+					※シェーダーリソースビューはComPtr
+		*/
 		inline ID3D11ShaderResourceView**GetShaderResourceView() { return m_pShaderResourceView.GetAddressOf(); }
+
 		/*!
 			@fn			タイリングモードとフィルタリングモードのセッター
 			@brief		タイリングモードとフィルタリングモードの設定
@@ -97,6 +111,7 @@ namespace API {
 		DirectX::XMINT2 m_Size;			/*!< 画像サイズ */
 		Microsoft::WRL::ComPtr<ID3D11SamplerState>		m_pSamplerState;		/*!< サンプラーステート */
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_pShaderResourceView;	/*!< シェーダーリソースビュー(SRV) */
+
 
 		/*!
 			@fn			画像の読み込み
