@@ -35,7 +35,7 @@ TextureAtlas::~TextureAtlas()
 	@param[in]	分割数(x,y)
 	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 divNum)
+HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMFLOAT2 divNum)
 {
 	return Initialize(filePath, divNum, m_eTileMode, m_eFilterMode);
 }
@@ -45,11 +45,12 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 	@brief		初期化
 	@detail		画像の読み込みと分割数の指定を行い、サンプラーステートの作成を行う
 	@param[in]	画像のパス
-	@param[in]	画像サイズ
+	@param[in]	表示する画像サイズ
+				※分割前の画像サイズでないことに注意
 	@param[in]	分割数(x,y)
 	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum)
+HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMFLOAT2 divNum)
 {
 	HRESULT hr;
 
@@ -73,7 +74,7 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 	@param[in]	タイリングモードの設定
 	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 divNum, const TileMode tileMode)
+HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMFLOAT2 divNum, const TileMode tileMode)
 {
 	return Initialize(filePath, divNum, tileMode, m_eFilterMode);
 }
@@ -83,12 +84,13 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 	@brief		初期化
 	@detail		画像の読み込みと分割数の指定を行い、サンプラーステートの作成を行う
 	@param[in]	画像のパス
-	@param[in]	画像サイズ
+	@param[in]	表示する画像サイズ
+				※分割前の画像サイズでないことに注意
 	@param[in]	分割数(x,y)
 	@param[in]	タイリングモードの設定
 	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum, const TileMode tileMode)
+HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMFLOAT2 divNum, const TileMode tileMode)
 {
 	HRESULT hr;
 
@@ -112,7 +114,7 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 	@param[in]	フィルタリングモードの設定
 	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 divNum, const FilteringMode filterMode)
+HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMFLOAT2 divNum, const FilteringMode filterMode)
 {
 	return Initialize(filePath, divNum, m_eTileMode, filterMode);
 }
@@ -122,12 +124,13 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 	@brief		初期化
 	@detail		画像の読み込みと分割数の指定を行い、サンプラーステートの作成を行う
 	@param[in]	画像のパス
-	@param[in]	画像サイズ
+	@param[in]	表示する画像サイズ
+				※分割前の画像サイズでないことに注意
 	@param[in]	分割数(x,y)
 	@param[in]	フィルタリングモードの設定
 	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum, const FilteringMode filterMode)
+HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMFLOAT2 divNum, const FilteringMode filterMode)
 {
 	HRESULT hr;
 
@@ -152,7 +155,7 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 	@param[in]	フィルタリングモードの設定
 	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 divNum, const TileMode tileMode, const FilteringMode filterMode)
+HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMFLOAT2 divNum, const TileMode tileMode, const FilteringMode filterMode)
 {
 	HRESULT hr;
 
@@ -189,13 +192,14 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 	@brief		初期化
 	@detail		画像の読み込みと分割数の指定を行い、サンプラーステートの作成を行う
 	@param[in]	画像のパス
-	@param[in]	画像サイズ
+	@param[in]	表示する画像サイズ
+				※分割前の画像サイズでないことに注意
 	@param[in]	分割数(x,y)
 	@param[in]	タイリングモードの設定
 	@param[in]	フィルタリングモードの設定
 	@return		成功:S_OK 失敗:E_FAIL
 */
-HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum, const TileMode tileMode, const FilteringMode filterMode)
+HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMFLOAT2 divNum, const TileMode tileMode, const FilteringMode filterMode)
 {
 	HRESULT hr;
 
@@ -226,7 +230,7 @@ void API::TextureAtlas::Finalize()
 	@brief		アトラステクスチャの分割数をxとy方向にどれだけ分割するか指定
 	@param[in]	分割数(x:x方向の個数,y:y方向の個数)
 */
-void API::TextureAtlas::SetDevNum(const DirectX::XMINT2 divNum)
+void API::TextureAtlas::SetDevNum(const DirectX::XMFLOAT2 divNum)
 {
 #ifdef DEBUG_TEXTURE
 	try
@@ -262,7 +266,7 @@ void API::TextureAtlas::SetDevNum(const DirectX::XMINT2 divNum)
 	@detail		アトラステクスチャの分割数より多い値は設定できません。
 	@param[in]	描画したいテクスチャ番号
 */
-void API::TextureAtlas::SetAtlasIndex(const DirectX::XMINT2 index)
+void API::TextureAtlas::SetAtlasIndex(const DirectX::XMFLOAT2 index)
 {
 #ifdef DEBUG_TEXTURE
 	std::string error;

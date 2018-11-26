@@ -401,7 +401,7 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 	
 	HRESULT hr;
 
-	const auto size = pTexture->GetSize();
+	auto size = pTexture->GetSize();
 
 	/*! 頂点バッファ生成 */
 	hr = CreateVertex(size);
@@ -473,7 +473,7 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 	mScale	= DirectX::XMMatrixScaling(m_Scale.x, m_Scale.y, c_ScaleZ);
 
 	/*! ワールド変換 */
-	mWorld = mScale * mRot*mTran;
+	mWorld = mScale * mRot * mTran;
 
 	/*! シェーダー側に渡すコンスタントバッファ宣言 */
 	SpriteShaderBuffer cb;
@@ -482,11 +482,13 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 	/*! コンスタントバッファのデータ書き換え */
 	auto camera = &Camera::GetInstance();
 	DirectX::XMMATRIX m = mWorld * camera->GetViewMatrix()*camera->GetProjMatrix();
-	cb.m_WVP = m;				/*!< ワールド行列 */
-	cb.m_DivNum = pTexture->GetDivNum();
-	cb.m_Index = pTexture->GetAtlasIndex();
-	cb.m_Color = m_Color;
-	cb.m_Alpha = m_Alpha;
+	cb.m_WVP		= m;				/*!< ワールド行列 */
+	cb.m_DivNum		= pTexture->GetDivNum();
+	cb.m_Index		= pTexture->GetAtlasIndex();
+	//cb.m_Index.x	+= 1;
+	//cb.m_Index.y	+= 1;
+	cb.m_Color		= m_Color;
+	cb.m_Alpha		= m_Alpha;
 
 	/*! UpdateSubResource */
 	Direct3D11::GetInstance().GetDeviceContext()->UpdateSubresource(

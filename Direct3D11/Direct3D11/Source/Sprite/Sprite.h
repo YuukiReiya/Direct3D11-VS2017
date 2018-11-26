@@ -134,8 +134,8 @@ namespace D3D11 {
 		struct SpriteShaderBuffer
 			:CONSTANT_BUFFER_BASE
 		{
-			ALIGN16<DirectX::XMINT2>	m_DivNum;
-			ALIGN16<DirectX::XMINT2>	m_Index;
+			ALIGN16<DirectX::XMFLOAT2>	m_DivNum;
+			ALIGN16<DirectX::XMFLOAT2>	m_Index;
 			ALIGN16<DirectX::XMFLOAT3>	m_Color;	/*< カラー */
 			ALIGN16<float>				m_Alpha;	/*< アルファ値 */
 		};

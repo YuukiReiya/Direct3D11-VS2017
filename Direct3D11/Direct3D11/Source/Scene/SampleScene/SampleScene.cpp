@@ -58,7 +58,9 @@ void SampleScene::Initialize()
 
 
 	m_pTexA = make_unique<TextureAtlas>();
-	m_pTexA->Initialize("image.jpg", { 1,1 });
+	m_pTexA->Initialize("atlas.png", { 3,4 });
+	//m_pTexA->SetSize({ 100,100 });
+	m_pTexA->SetAtlasIndex({ 0,0 });
 	//m_pTexA->Initialize()
 }
 

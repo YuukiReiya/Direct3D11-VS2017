@@ -36,18 +36,19 @@ namespace API {
 			@param[in]	分割数(x,y)
 			@return		成功:S_OK 失敗:E_FAIL
 		*/
-		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 divNum);
+		HRESULT Initialize(std::string filePath, const DirectX::XMFLOAT2 divNum);
 
 		/*!
 			@fn			イニシャライズ
 			@brief		初期化
 			@detail		画像の読み込みと画像サイズの指定、分割数の指定を行い、サンプラーステートの作成を行う
 			@param[in]	画像のパス
-			@param[in]	画像サイズ
+			@param[in]	表示する画像サイズ
+						※分割前の画像サイズでないことに注意
 			@param[in]	分割数(x,y)
 			@return		成功:S_OK 失敗:E_FAIL
 		*/
-		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum);
+		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMFLOAT2 divNum);
 
 		/*!
 			@fn			イニシャライズ
@@ -58,19 +59,20 @@ namespace API {
 			@param[in]	タイリングモードの設定
 			@return		成功:S_OK 失敗:E_FAIL
 		*/
-		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 divNum, const TileMode tileMode);
+		HRESULT Initialize(std::string filePath, const DirectX::XMFLOAT2 divNum, const TileMode tileMode);
 
 		/*!
 			@fn			イニシャライズ
 			@brief		初期化
 			@detail		画像の読み込みと画像サイズの指定、分割数の指定を行い、サンプラーステートの作成を行う
 			@param[in]	画像のパス
-			@param[in]	画像サイズ
+			@param[in]	表示する画像サイズ
+						※分割前の画像サイズでないことに注意
 			@param[in]	分割数(x,y)
 			@param[in]	タイリングモードの設定
 			@return		成功:S_OK 失敗:E_FAIL
 		*/
-		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum, const TileMode tileMode);
+		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMFLOAT2 divNum, const TileMode tileMode);
 
 
 		/*!
@@ -82,19 +84,20 @@ namespace API {
 			@param[in]	フィルタリングモードの設定
 			@return		成功:S_OK 失敗:E_FAIL
 		*/
-		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 divNum,const FilteringMode filterMode);
+		HRESULT Initialize(std::string filePath, const DirectX::XMFLOAT2 divNum,const FilteringMode filterMode);
 
 		/*!
 			@fn			イニシャライズ
 			@brief		初期化
 			@detail		画像の読み込みと画像サイズの指定、分割数の指定を行い、サンプラーステートの作成を行う
 			@param[in]	画像のパス
-			@param[in]	画像サイズ
+			@param[in]	表示する画像サイズ
+						※分割前の画像サイズでないことに注意
 			@param[in]	分割数(x,y)
 			@param[in]	フィルタリングモードの設定
 			@return		成功:S_OK 失敗:E_FAIL
 		*/
-		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum, const FilteringMode filterMode);
+		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMFLOAT2 divNum, const FilteringMode filterMode);
 
 
 		/*!
@@ -107,20 +110,21 @@ namespace API {
 			@param[in]	フィルタリングモードの設定
 			@return		成功:S_OK 失敗:E_FAIL
 		*/
-		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 divNum, const TileMode tileMode, const FilteringMode filterMode);
+		HRESULT Initialize(std::string filePath, const DirectX::XMFLOAT2 divNum, const TileMode tileMode, const FilteringMode filterMode);
 
 		/*!
 			@fn			イニシャライズ
 			@brief		初期化
 			@detail		画像の読み込みと画像サイズの指定、分割数の指定を行い、サンプラーステートの作成を行う
 			@param[in]	画像のパス
-			@param[in]	画像サイズ
+			@param[in]	表示する画像サイズ
+						※分割前の画像サイズでないことに注意
 			@param[in]	分割数(x,y)
 			@param[in]	タイリングモードの設定
 			@param[in]	フィルタリングモードの設定
 			@return		成功:S_OK 失敗:E_FAIL
 	*/
-		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMINT2 divNum, const TileMode tileMode, const FilteringMode filterMode);
+		HRESULT Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMFLOAT2 divNum, const TileMode tileMode, const FilteringMode filterMode);
 
 		/*!
 			@fn		ファイナライズ
@@ -134,7 +138,7 @@ namespace API {
 			@brief		アトラステクスチャの分割数をxとy方向にどれだけ分割するか指定
 			@param[in]	分割数(x:x方向の個数,y:y方向の個数)
 		*/
-		void SetDevNum(const DirectX::XMINT2 divNum);
+		void SetDevNum(const DirectX::XMFLOAT2 divNum);
 
 		/*!
 			@fn			描画インデックスのセッター
@@ -142,14 +146,14 @@ namespace API {
 			@detail		アトラステクスチャの分割数より多い値は設定できません。
 			@param[in]	描画したいテクスチャ番号
 		*/
-		void SetAtlasIndex(const DirectX::XMINT2 index);
+		void SetAtlasIndex(const DirectX::XMFLOAT2 index);
 
 		/*!
 			@fn		分割数のゲッター
 			@brief	分割数の取得
 			@detail	設定した分割数を取得する
 		*/
-		inline DirectX::XMINT2 GetDivNum()const {
+		inline DirectX::XMFLOAT2 GetDivNum()const {
 			return m_DivNum;
 		}
 
@@ -158,12 +162,12 @@ namespace API {
 			@brief	描画するアトラステクスチャのインデックス取得
 			@detail	分割したテクスチャの描画場所を取得
 		*/
-		inline DirectX::XMINT2 GetAtlasIndex()const {
+		inline DirectX::XMFLOAT2 GetAtlasIndex()const {
 			return m_Index;
 		}
 	private:
-		DirectX::XMINT2 m_DivNum;	/*!< 分割数 */
-		DirectX::XMINT2 m_Index;	/*!< 描画するテクスチャ番号 */
+		DirectX::XMFLOAT2 m_DivNum;	/*!< 分割数 */
+		DirectX::XMFLOAT2 m_Index;	/*!< 描画するテクスチャ番号 */
 	};
 
 }

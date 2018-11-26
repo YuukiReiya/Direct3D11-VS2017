@@ -5,9 +5,9 @@ SamplerState g_Sampler : register(s0);
 
 cbuffer global
 {
-	matrix g_WVP; //ワールドから射影までの変換行列
-	int2 g_DivNum;	/*!< テクスチャの分割数 */
-	int2 g_useIndexUV;/*!< 分割したテクスチャの描画インデックス */
+	matrix g_WVP;		/*!< ワールドから射影までの変換行列 */
+	float2 g_DivNum;		/*!< テクスチャの分割数 */
+	float2 g_useIndexUV;	/*!< 分割したテクスチャの描画インデックス */
 };
 //構造体
 struct PS_INPUT
@@ -21,11 +21,40 @@ struct PS_INPUT
 //バーテックスシェーダー
 PS_INPUT VS( float4 Pos : POSITION ,float2 UV : TEXCOORD) 
 {
+	/*! 宣言 */
 	PS_INPUT Out;
-	matrix m = transpose(g_WVP);/*!< 転置行列 */
-	Out.Pos = mul(Pos, m);		
+
+	/*! 座標計算 */
+	{
+		matrix m = transpose(g_WVP);/*!< 転置行列 */
+
+		Out.Pos = mul(Pos, m);
+	}
 	
-	Out.UV = UV;
+	/*! UV計算 */
+	{
+		//Out.UV = UV;
+		//float x = UV.x * g_useIndexUV.x / g_DivNum.x;
+		//x = UV.x * 1 + (g_useIndexUV.x / g_useIndexUV.x);
+		//float y = UV.y * g_useIndexUV.y / g_DivNum.y;
+		//y = UV.y * 1 + (g_useIndexUV.y / g_useIndexUV.y);
+		//Out.UV.x = x;
+		//Out.UV.y = y;
+
+		float x, y;
+
+		float n, m;
+
+
+
+		x = UV.x *(1.0f / g_DivNum.x) + (g_useIndexUV.x / g_DivNum.x);
+		y = UV.y *(1.0f / g_DivNum.y) + (g_useIndexUV.y / g_DivNum.y);
+
+		Out.UV.x = x;
+		Out.UV.y = y;
+		//切り抜き
+		//Out.UV = UV * float2(0.5f, 0.5f) + float2(0.2f, 0.2f);
+	}
 
 	return Out;
 }
