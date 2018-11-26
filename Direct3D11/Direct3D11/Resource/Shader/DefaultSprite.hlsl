@@ -33,20 +33,7 @@ PS_INPUT VS( float4 Pos : POSITION ,float2 UV : TEXCOORD)
 	
 	/*! UVŒvŽZ */
 	{
-		//Out.UV = UV;
-		//float x = UV.x * g_useIndexUV.x / g_DivNum.x;
-		//x = UV.x * 1 + (g_useIndexUV.x / g_useIndexUV.x);
-		//float y = UV.y * g_useIndexUV.y / g_DivNum.y;
-		//y = UV.y * 1 + (g_useIndexUV.y / g_useIndexUV.y);
-		//Out.UV.x = x;
-		//Out.UV.y = y;
-
 		float x, y;
-
-		float n, m;
-
-
-
 		x = UV.x *(1.0f / g_DivNum.x) + (g_useIndexUV.x / g_DivNum.x);
 		y = UV.y *(1.0f / g_DivNum.y) + (g_useIndexUV.y / g_DivNum.y);
 

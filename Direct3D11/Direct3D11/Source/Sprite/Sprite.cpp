@@ -61,19 +61,19 @@ HRESULT Sprite::Initialize()
 	/*! αテスト設定 */
 	D3D11_BLEND_DESC alphaBlend;
 	SecureZeroMemory(&alphaBlend, sizeof(alphaBlend));
-	//alphaBlend.RenderTarget[0].BlendEnable		= true;
-	//alphaBlend.RenderTarget[0].SrcBlend			= D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
-	//alphaBlend.RenderTarget[0].DestBlend		= D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
-	//alphaBlend.RenderTarget[0].BlendOp			= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
-	//alphaBlend.RenderTarget[0].SrcBlendAlpha	= D3D11_BLEND::D3D11_BLEND_ONE;
-	//alphaBlend.RenderTarget[0].DestBlendAlpha	= D3D11_BLEND::D3D11_BLEND_ZERO;
-	//alphaBlend.RenderTarget[0].BlendOpAlpha		= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
-	//alphaBlend.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-	//alphaBlend.AlphaToCoverageEnable = true;	/*!< 切り取った部分に対するアンチエイリアス処理の有無 */
+	alphaBlend.RenderTarget[0].BlendEnable		= true;
+	alphaBlend.RenderTarget[0].SrcBlend			= D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
+	alphaBlend.RenderTarget[0].DestBlend		= D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
+	alphaBlend.RenderTarget[0].BlendOp			= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	alphaBlend.RenderTarget[0].SrcBlendAlpha	= D3D11_BLEND::D3D11_BLEND_ONE;
+	alphaBlend.RenderTarget[0].DestBlendAlpha	= D3D11_BLEND::D3D11_BLEND_ZERO;
+	alphaBlend.RenderTarget[0].BlendOpAlpha		= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	alphaBlend.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	alphaBlend.AlphaToCoverageEnable = true;	/*!< 切り取った部分に対するアンチエイリアス処理の有無 */
 
 	hr = Direct3D11::GetInstance().GetDevice()->CreateBlendState(
 		&alphaBlend,
-		&m_pBlendState
+		m_pBlendState.GetAddressOf()
 	);
 	if (FAILED(hr)) {
 		std::string error = "BlendState is not create!";
@@ -485,8 +485,6 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 	cb.m_WVP		= m;				/*!< ワールド行列 */
 	cb.m_DivNum		= pTexture->GetDivNum();
 	cb.m_Index		= pTexture->GetAtlasIndex();
-	//cb.m_Index.x	+= 1;
-	//cb.m_Index.y	+= 1;
 	cb.m_Color		= m_Color;
 	cb.m_Alpha		= m_Alpha;
 
@@ -511,6 +509,13 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 		&offset
 	);
 
+
+	uint32_t blendColor = 0xffffffff;
+	Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(
+		m_pBlendState.Get(),
+		NULL,
+		blendColor
+	);
 
 	/*! 描画 */
 	Direct3D11::GetInstance().GetDeviceContext()->Draw(
