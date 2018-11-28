@@ -94,13 +94,13 @@ namespace API{
 			DirectX::XMFLOAT3 m_Pos;
 			DirectX::XMFLOAT3 m_Rot;
 			DirectX::XMFLOAT3 m_Scale;
-			DirectX::XMFLOAT3 m_Color;
-
+		public:
+			DirectX::XMFLOAT4 m_Color;
+		private:
 			/*! スプライトの */
 			DirectX::XMINT2 m_Size;
 			DirectX::XMFLOAT2 m_TilingRatio;		/*!< タイリングする際の割合 */
 			float m_Alpha;
-
 
 	};
 
@@ -136,8 +136,7 @@ namespace D3D11 {
 		{
 			ALIGN16<DirectX::XMFLOAT2>	m_DivNum;
 			ALIGN16<DirectX::XMFLOAT2>	m_Index;
-			ALIGN16<DirectX::XMFLOAT3>	m_Color;	/*< カラー */
-			ALIGN16<float>				m_Alpha;	/*< アルファ値 */
+			ALIGN16<DirectX::XMFLOAT4>	m_Color;	/*< カラー */
 		};
 	}
 }

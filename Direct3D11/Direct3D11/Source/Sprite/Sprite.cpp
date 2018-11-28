@@ -68,8 +68,10 @@ HRESULT Sprite::Initialize()
 	alphaBlend.RenderTarget[0].SrcBlendAlpha	= D3D11_BLEND::D3D11_BLEND_ONE;
 	alphaBlend.RenderTarget[0].DestBlendAlpha	= D3D11_BLEND::D3D11_BLEND_ZERO;
 	alphaBlend.RenderTarget[0].BlendOpAlpha		= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
-	alphaBlend.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	alphaBlend.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
 	alphaBlend.AlphaToCoverageEnable = true;	/*!< 切り取った部分に対するアンチエイリアス処理の有無 */
+	alphaBlend.IndependentBlendEnable = false;
+
 
 	hr = Direct3D11::GetInstance().GetDevice()->CreateBlendState(
 		&alphaBlend,
@@ -357,7 +359,6 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	cb.m_DivNum = { 1,1 };
 	cb.m_Index = { 0,0 };
 	cb.m_Color = m_Color;
-	cb.m_Alpha = m_Alpha;
 	
 	/*! メモリコピー */
 	memcpy_s(pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb));
@@ -396,6 +397,8 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	@param[in]	描画するテクスチャ
 	@return		成功:S_OK 失敗:E_FAIL
 */
+#include "../Input/Keyboard/Keyboard.h"
+using namespace Keyboard;
 HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 {
 	
@@ -482,11 +485,11 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 	/*! コンスタントバッファのデータ書き換え */
 	auto camera = &Camera::GetInstance();
 	DirectX::XMMATRIX m = mWorld * camera->GetViewMatrix()*camera->GetProjMatrix();
+	
 	cb.m_WVP		= m;				/*!< ワールド行列 */
 	cb.m_DivNum		= pTexture->GetDivNum();
 	cb.m_Index		= pTexture->GetAtlasIndex();
 	cb.m_Color		= m_Color;
-	cb.m_Alpha		= m_Alpha;
 
 	/*! UpdateSubResource */
 	Direct3D11::GetInstance().GetDeviceContext()->UpdateSubresource(

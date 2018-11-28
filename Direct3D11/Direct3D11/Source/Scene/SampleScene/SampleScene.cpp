@@ -40,18 +40,17 @@ void SampleScene::Initialize()
 	m_pTex = make_unique<Texture>();
 	//m_pSprite = make_unique<Sprite>();
 	//m_pTex2 = make_unique<Texture>();
-	m_pSprite2 = make_unique<Sprite>();
 
 	m_pSprite = make_unique<Sprite>();
 	m_pSprite->Initialize();
-	m_pTex->Initialize("image.jpg", { 308,163 });
+	//m_pTex->Initialize("image.jpg", { 308,163 });
 	////m_pSprite->Initialize();
 	//m_pTex2->Initialize("test.png", { 256,256 });
-	m_pSprite2->Initialize();
 
 	m_pWav = make_unique<Wave>();
-	m_pWav->Load("07 フォーチュンナンバー0405.wav");
-	m_pWav->Play(true);
+	////m_pWav->Load("07 フォーチュンナンバー0405.wav");
+	//m_pWav->Play(true);
+	//m_pWav->SetVolume(0);
 	//m_pWav2 = make_unique<Wave>();
 	//m_pWav2->Load("Resource/Sound/se.wav");
 	//m_pWav2->Play(true);
@@ -59,6 +58,9 @@ void SampleScene::Initialize()
 
 	m_pTexA = make_unique<TextureAtlas>();
 	m_pTexA->Initialize("atlas.png", { 3,4 });
+	
+	m_pSprite->SetAlpha(0);
+
 	//m_pTexA->SetSize({ 100,100 });
 	m_pTexA->SetAtlasIndex({ 0,0 });
 	//m_pTexA->Initialize()
@@ -76,6 +78,7 @@ void SampleScene::Finalize()
 	@brief	更新
 */
 #include <iostream>
+using namespace Keyboard;
 Scene * SampleScene::Update(SceneRoot * root)
 {
 	Keyboard::Update();
@@ -92,13 +95,49 @@ Scene * SampleScene::Update(SceneRoot * root)
 	scale.x+= Keyboard::GetButton('Z') ? 0.1f : 0;
 	scale.x -= Keyboard::GetButton('C') ? 0.1f : 0;
 
-	static DirectX::XMFLOAT3 angle = { 0,0,0 };
-	angle.x+= Keyboard::GetButton('N') ? 0.1f : 0;
-	angle.x -= Keyboard::GetButton('M') ? 0.1f : 0;
+	//static DirectX::XMFLOAT3 angle = { 0,0,0 };
+	//angle.x+= Keyboard::GetButton('N') ? 0.1f : 0;
+	//angle.x -= Keyboard::GetButton('M') ? 0.1f : 0;
 
 	m_pSprite.get()->SetPos(pos);
 	m_pSprite.get()->SetScale(scale);
-	m_pSprite.get()->SetRot(angle);
+	//m_pSprite.get()->SetRot(angle);
+
+	static DirectX::XMFLOAT4 cr = { 1,1,1,1 };
+
+	if (GetButton('R')) {
+		cr.x += 0.01f;
+	}
+	else if (GetButton('T')) {
+		cr.x -= 0.01f;
+	}
+
+	if (GetButton('G')) {
+		cr.y += 0.01f;
+	}
+	else if (GetButton('H')) {
+		cr.y -= 0.01f;
+	}
+
+	if (GetButton('B')) {
+		cr.z += 0.01f;
+	}
+	else if (GetButton('N')) {
+		cr.z -= 0.01f;
+	}
+
+	if (GetButton('K')) {
+		cr.w += 0.01f;
+	}
+	else if (GetButton('L')) {
+		cr.w -= 0.01f;
+	}
+
+	if (GetButtonDown('O')) {
+		std::cout << cr.x << "," << cr.y << "," << cr.z << "," << cr.w << "\n";
+	}
+
+	m_pSprite.get()->m_Color = cr;
 
 
 	if (Keyboard::GetButtonDown(Keyboard::LEFT)) {
@@ -124,6 +163,6 @@ void SampleScene::Render()
 	//m_pSprite2->Render(m_pTex2.get());
 	//m_pSprite->SetPos({ 1,0 });
 	m_pSprite->Render(m_pTexA.get());
-	m_pSprite->SetPos({ 1,0 });
-	m_pSprite->Render(m_pTex.get());
+	/*m_pSprite->SetPos({ 1,0 });
+	m_pSprite->Render(m_pTex.get());*/
 }

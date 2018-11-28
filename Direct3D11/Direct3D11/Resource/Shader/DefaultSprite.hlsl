@@ -1,13 +1,14 @@
 //グローバル
 
-Texture2D g_Texture: register(t0);
+Texture2D g_Texture : register(t0);
 SamplerState g_Sampler : register(s0);
 
 cbuffer global
 {
-	matrix g_WVP;		/*!< ワールドから射影までの変換行列 */
+	matrix g_WVP;			/*!< ワールドから射影までの変換行列 */
 	float2 g_DivNum;		/*!< テクスチャの分割数 */
 	float2 g_useIndexUV;	/*!< 分割したテクスチャの描画インデックス */
+	float4 g_Color;			/*!< カラー */
 };
 //構造体
 struct PS_INPUT
@@ -30,12 +31,12 @@ PS_INPUT VS( float4 Pos : POSITION ,float2 UV : TEXCOORD)
 
 		Out.Pos = mul(Pos, m);
 	}
-	
+
 	/*! UV計算 */
 	{
 		float x, y;
-		x = UV.x *(1.0f / g_DivNum.x) + (g_useIndexUV.x / g_DivNum.x);
-		y = UV.y *(1.0f / g_DivNum.y) + (g_useIndexUV.y / g_DivNum.y);
+		x = UV.x * (1.0f / g_DivNum.x) + (g_useIndexUV.x / g_DivNum.x);
+		y = UV.y * (1.0f / g_DivNum.y) + (g_useIndexUV.y / g_DivNum.y);
 
 		Out.UV.x = x;
 		Out.UV.y = y;
@@ -50,5 +51,12 @@ PS_INPUT VS( float4 Pos : POSITION ,float2 UV : TEXCOORD)
 //ピクセルシェーダー
 float4 PS( PS_INPUT Input ) : SV_Target
 {
-	return g_Texture.Sample( g_Sampler, Input.UV );
+	float4 color = g_Texture.Sample(g_Sampler, Input.UV);
+
+	/*! カラー計算 */
+	{
+		color *= g_Color;
+	}
+
+	return color;
 }
