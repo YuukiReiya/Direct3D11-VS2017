@@ -37,7 +37,7 @@ Sprite::Sprite()
 	m_pVertexBuffer		= nullptr;
 	m_pBlendState		= nullptr;
 	m_Pos = { 0,0,0 };
-	m_Color = { 1,1,1,1 };
+	//m_Color = { 1,1,1,1 };
 	m_Scale = { 1,1 ,0 };
 	m_Rot = {0,0,0};
 	m_Size = { -1,-1 };
@@ -130,7 +130,6 @@ void Sprite::Finalize()
 	m_Pos = { 0,0,0 };
 	m_Scale = { 1,1 ,0 };
 	m_Rot = { 0,0,0 };
-	m_Color = { 1, 1, 1, 1 };
 	m_Size = { -1,-1 };
 	m_StencilMask = 0xffffffff;
 
@@ -289,12 +288,13 @@ HRESULT API::Sprite::Render(Texture * pTexture)
 	}
 
 	auto camera = &Camera::GetInstance();
+	const Color& color = pTexture->m_Color;
 	/*! コンスタントバッファにデータを送る */
 	DirectX::XMMATRIX m = mWorld*camera->GetViewMatrix()*camera->GetProjMatrix();
 	cb.m_WVP = m;						/*!< ワールド行列 */
 	cb.m_DivNum = { 1,1 };
 	cb.m_Index = { 0,0 };
-	cb.m_Color = m_Color;
+	cb.m_Color = color.GetRGBA();
 	
 	/*! メモリコピー */
 	memcpy_s(pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb));
@@ -424,12 +424,13 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 
 	/*! コンスタントバッファのデータ書き換え */
 	auto camera = &Camera::GetInstance();
+	const Color& color = pTexture->m_Color;
 	DirectX::XMMATRIX m = mWorld * camera->GetViewMatrix()*camera->GetProjMatrix();
 	
 	cb.m_WVP		= m;				/*!< ワールド行列 */
 	cb.m_DivNum		= pTexture->GetDivNum();
 	cb.m_Index		= pTexture->GetAtlasIndex();
-	cb.m_Color		= m_Color;
+	cb.m_Color		= color.GetRGBA();
 
 	/*! UpdateSubResource */
 	Direct3D11::GetInstance().GetDeviceContext()->UpdateSubresource(
@@ -562,12 +563,13 @@ HRESULT API::Sprite::RenderTile(Texture * pTexture, const DirectX::XMFLOAT2 rati
 
 	/*! コンスタントバッファのデータ書き換え */
 	auto camera = &Camera::GetInstance();
+	const Color& color = pTexture->m_Color;
 	DirectX::XMMATRIX m = mWorld * camera->GetViewMatrix()*camera->GetProjMatrix();
 
 	cb.m_WVP = m;				/*!< ワールド行列 */
 	cb.m_DivNum = { 1,1 };
 	cb.m_Index = { 0,0 };
-	cb.m_Color = m_Color;
+	cb.m_Color = color.GetRGBA();
 
 	/*! UpdateSubResource */
 	Direct3D11::GetInstance().GetDeviceContext()->UpdateSubresource(

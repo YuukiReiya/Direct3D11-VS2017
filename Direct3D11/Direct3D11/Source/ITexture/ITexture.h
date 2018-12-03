@@ -10,6 +10,7 @@
 #include <DirectXMath.h>
 #include <wrl/client.h>
 #include <string>
+#include "../Color/Color.h"
 
 /*!
 	@namespace	API
@@ -105,6 +106,8 @@ namespace API {
 			@detail		サンプラーステートを作成
 		*/
 		HRESULT SetTileAndFiltering(const TileMode tileMode, const FilteringMode filterMode);
+	public:
+		Color			m_Color;		/*!< カラー */
 	protected:
 		TileMode		m_eTileMode;	/*!< タイリングモード */
 		FilteringMode	m_eFilterMode;	/*!< フィルタリングモード */

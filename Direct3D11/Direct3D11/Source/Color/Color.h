@@ -15,9 +15,29 @@ class Color
 public:
 	/*!
 		@brief	コンストラクタ
-		@detail	空コンストラクタ
 	*/
 	Color();
+
+	/*!
+		@brief		引数付きコンストラクタ
+		@param[in]	一時変数
+	*/
+	Color(Color&&color);
+
+	/*!
+		@brief		引数付きコンストラクタ
+		@param[in]	R( 0.0f ～ 1.0f )
+		@param[in]	G( 0.0f ～ 1.0f )
+		@param[in]	B( 0.0f ～ 1.0f )
+		@param[in]	A( 0.0f ～ 1.0f )
+	*/
+	Color(float r, float g, float b, float a = 1.0f);
+
+	/*!
+		@brief		引数付きコンストラクタ
+		@param[in]	FLOAT4型からカラー型へ変換
+	*/
+	Color(DirectX::XMFLOAT4 color);
 
 	/*!
 		@brief	デストラクタ

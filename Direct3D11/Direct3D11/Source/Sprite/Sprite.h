@@ -13,6 +13,7 @@
 #include "../IRenderer/IRenderer.h"
 #include "../Texture/Texture.h"
 #include "../TextureAtlas/TextureAtlas.h"
+#include "../Color/Color.h"
 
 /*! APIの名前空間に含める */
 namespace API{
@@ -90,7 +91,6 @@ namespace API{
 			void SetPos(DirectX::XMFLOAT2 pos);
 			void SetRot(DirectX::XMFLOAT3 rot) { m_Rot.x = rot.x, m_Rot.y = rot.y, m_Rot.z = rot.z; }
 			void SetScale(DirectX::XMFLOAT2 scale);
-			void SetAlpha(float alpha) { m_Alpha = alpha; }
 			void SetStencilMask(uint32_t mask) { m_StencilMask = mask; }
 
 			/*!
@@ -165,13 +165,9 @@ namespace API{
 			DirectX::XMFLOAT3 m_Pos;
 			DirectX::XMFLOAT3 m_Rot;
 			DirectX::XMFLOAT3 m_Scale;
-		public:
-			DirectX::XMFLOAT4 m_Color;
 		private:
 			/*! スプライトの */
 			DirectX::XMINT2 m_Size;
-			float m_Alpha;
-
 	};
 
 }

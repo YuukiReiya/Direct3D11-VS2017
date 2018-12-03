@@ -60,7 +60,6 @@ void SampleScene::Initialize()
 	m_pTexA = make_unique<TextureAtlas>();
 	m_pTexA->Initialize("at.png", { 3,4 },API::ITexture::Wrap);
 	
-	m_pSprite->SetAlpha(0);
 
 	//m_pTexA->SetSize({ 100,100 });
 	m_pTexA->SetAtlasIndex({ 0,0 });
@@ -104,7 +103,7 @@ Scene * SampleScene::Update(SceneRoot * root)
 	m_pSprite.get()->SetScale(scale);
 	//m_pSprite.get()->SetRot(angle);
 
-	static DirectX::XMFLOAT4 cr = { 1,1,1,1 };
+	auto& cr = m_pTex->m_Color;
 
 	if (GetButton('R')) {
 		cr.x += 0.01f;
@@ -136,9 +135,10 @@ Scene * SampleScene::Update(SceneRoot * root)
 
 	if (GetButtonDown('O')) {
 		std::cout << cr.x << "," << cr.y << "," << cr.z << "," << cr.w << "\n";
+		std::cout << cr.r << "," << cr.g << "," << cr.b << "," << cr.a << "\n";
 	}
 
-	m_pSprite.get()->m_Color = cr;
+	//m_pSprite.get()->m_Color = cr;
 
 
 	if (Keyboard::GetButtonDown(Keyboard::LEFT)) {
