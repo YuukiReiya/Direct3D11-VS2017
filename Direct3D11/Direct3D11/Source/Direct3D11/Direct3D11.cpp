@@ -135,10 +135,10 @@ bool Direct3D11::Initialize(HWND hWnd)
 		GetArraySize(featureLevels),	/*!< 上記配列の要素数 */
 		D3D11_SDK_VERSION,				/*!< 使用しているSDKのバージョン */
 		&sd,							/*!< スワップ・チェインの設定 */
-		&m_pSwapChain,					/*!< IDXGISwapChain インターフェースの変数 */
-		&m_pDevice,						/*!< ID3D11Device インターフェースの変数 */
+		m_pSwapChain.GetAddressOf(),	/*!< IDXGISwapChain インターフェースの変数 */
+		m_pDevice.GetAddressOf(),		/*!< ID3D11Device インターフェースの変数 */
 		pFeatureLevelsSupported,		/*!< 機能レベルを取得する変数 */
-		&m_pDeviceContext				/*!< ID3D11DeviceContext インターフェースの変数 */
+		m_pDeviceContext.GetAddressOf()	/*!< ID3D11DeviceContext インターフェースの変数 */
 	);
 	if (FAILED(hr)) { 
 		ErrorLog("SwapChain is not create!");

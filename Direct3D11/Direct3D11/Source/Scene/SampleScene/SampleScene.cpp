@@ -38,13 +38,14 @@ SampleScene::~SampleScene()
 void SampleScene::Initialize()
 {
 	m_pTex = make_unique<Texture>();
-	//m_pSprite = make_unique<Sprite>();
+	m_pSprite2 = make_unique<Sprite>();
 	//m_pTex2 = make_unique<Texture>();
 
 	m_pSprite = make_unique<Sprite>();
 	m_pSprite->Initialize();
-	//m_pTex->Initialize("image.jpg", { 308,163 });
-	////m_pSprite->Initialize();
+	m_pSprite2->Initialize();
+	//m_pTex->Initialize("image.jpg", { 308,163 },API::ITexture::Wrap);
+	m_pTex->Initialize("test.png", { 308,163 }, API::ITexture::Wrap);
 	//m_pTex2->Initialize("test.png", { 256,256 });
 
 	m_pWav = make_unique<Wave>();
@@ -57,7 +58,7 @@ void SampleScene::Initialize()
 
 
 	m_pTexA = make_unique<TextureAtlas>();
-	m_pTexA->Initialize("atlas.png", { 3,4 });
+	m_pTexA->Initialize("at.png", { 3,4 },API::ITexture::Wrap);
 	
 	m_pSprite->SetAlpha(0);
 
@@ -162,7 +163,12 @@ void SampleScene::Render()
 {
 	//m_pSprite2->Render(m_pTex2.get());
 	//m_pSprite->SetPos({ 1,0 });
-	m_pSprite->Render(m_pTexA.get());
+	//m_pSprite->SetPos({0,0,0});
 	/*m_pSprite->SetPos({ 1,0 });
 	m_pSprite->Render(m_pTex.get());*/
+
+	//m_pSprite2->Render(m_pTexA.get());
+	//m_pSprite2->SetPos({ 0,0,-0.1 });
+	m_pSprite->Render(m_pTexA.get());
+	m_pSprite2->RenderTile(m_pTex.get(), {2,5});
 }

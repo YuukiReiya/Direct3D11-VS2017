@@ -55,6 +55,7 @@ namespace D3D11 {
 		/*! ’è” */
 		static const float c_ClearColor[4];
 
+	public:
 		/*! •Ï” */
 		Microsoft::WRL::ComPtr<ID3D11Device>			m_pDevice;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext>		m_pDeviceContext;

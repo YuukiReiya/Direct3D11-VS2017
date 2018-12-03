@@ -9,6 +9,7 @@ cbuffer global
 	float2 g_DivNum;		/*!< テクスチャの分割数 */
 	float2 g_useIndexUV;	/*!< 分割したテクスチャの描画インデックス */
 	float4 g_Color;			/*!< カラー */
+	//float  g_Alpha;
 };
 //構造体
 struct PS_INPUT
@@ -40,6 +41,7 @@ PS_INPUT VS( float4 Pos : POSITION ,float2 UV : TEXCOORD)
 
 		Out.UV.x = x;
 		Out.UV.y = y;
+
 		//切り抜き
 		//Out.UV = UV * float2(0.5f, 0.5f) + float2(0.2f, 0.2f);
 	}
@@ -56,6 +58,12 @@ float4 PS( PS_INPUT Input ) : SV_Target
 	/*! カラー計算 */
 	{
 		color *= g_Color;
+	}
+
+	/*! α値計算 */
+	{
+		/*! α値0以下のピクセルは描画しない→アルファテスト */
+		if (color.a <= 0.0f)discard;
 	}
 
 	return color;
