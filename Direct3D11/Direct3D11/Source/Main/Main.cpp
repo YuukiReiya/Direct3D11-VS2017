@@ -59,12 +59,12 @@ bool Main::Initialize(HINSTANCE hInstance)
 
 	/*! ウィンドウ作成 */
 	if (!m_pWindow->Init(&m_hWnd, hInstance,
-		0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, appName)) {
+		0, 0, c_WindowWidth, c_WindowHeight, appName)) {
 		return false;
 	}
 
 	/*! Direct3Dデバイスの初期化 */
-	if (!Direct3D11::GetInstance().Initialize(m_hWnd)) { return false; }
+	if (FAILED(Direct3D11::GetInstance().Initialize(m_hWnd))) { return false; }
 
 	/*! デバッグコンソール表示 */
 #ifdef DEBUG_CONSOLE

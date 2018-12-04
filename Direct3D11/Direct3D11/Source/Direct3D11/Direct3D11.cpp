@@ -12,12 +12,6 @@
 #if defined DEBUG || _DEBUG
 #include <dxgidebug.h>
 #endif
-/*!
-	@def	MSAA
-	@brief	マルチサンプル・アンチエイリアス(コメントアウトするとMSAA無し)
-*/
-//#define MSAA
-
 
 /*!
 	@brief	usingディレクティブ
@@ -56,16 +50,20 @@ Direct3D11::~Direct3D11()
 }
 
 /*!
-	@brief	初期化
+	@fn			イニシャライズ
+	@brief		初期化
+	@detail		デバイスの作成
+	@param[in]	ウィンドウハンドラ
+	@return		S_OK:成功 E_FAIL:失敗
 */
-bool Direct3D11::Initialize(HWND hWnd)
+HRESULT Direct3D11::Initialize(HWND hWnd)
 {
 	/*! デバイスとスワップ・チェイン作成 */
 	DXGI_SWAP_CHAIN_DESC sd;
 	SecureZeroMemory(&sd, sizeof(sd));
 	sd.BufferCount							= 1;							/*!< バック・バッファ数 */
-	sd.BufferDesc.Width						= WINDOW_WIDTH;					/*!< バック・バッファの幅 */
-	sd.BufferDesc.Height					= WINDOW_HEIGHT;				/*!< バック・バッファの高さ */
+	sd.BufferDesc.Width						= c_WindowWidth;					/*!< バック・バッファの幅 */
+	sd.BufferDesc.Height					= c_WindowHeight;				/*!< バック・バッファの高さ */
 	sd.BufferDesc.Format					= DXGI_FORMAT_R8G8B8A8_UNORM;	/*!< フォーマット */
 	sd.BufferDesc.RefreshRate.Numerator		= 60;							/*!< リフレッシュ・レート(分子) */
 	sd.BufferDesc.RefreshRate.Denominator	= 1;							/*!< リフレッシュ・レート(分母) */
@@ -121,8 +119,7 @@ bool Direct3D11::Initialize(HWND hWnd)
 #if defined(DEBUG)||defined(_DEBUG)
 	UINT createDeviceFlags = D3D11_CREATE_DEVICE_DEBUG;
 #else
-//	UINT createDeviceFlags = 0;
-	UINT createDeviceFlags = D3D11_CREATE_DEVICE_DEBUG;
+	UINT createDeviceFlags = 0;
 #endif//DEBUG|_DEBUG
 
 	/*! デバイスとスワップ・チェインの作成 */
@@ -142,7 +139,7 @@ bool Direct3D11::Initialize(HWND hWnd)
 	);
 	if (FAILED(hr)) { 
 		ErrorLog("SwapChain is not create!");
-		return false;/*!< デバイスの作成に失敗 */
+		return E_FAIL;/*!< デバイスの作成に失敗 */
 	}
 
 #if defined DEBUG || _DEBUG
@@ -169,7 +166,7 @@ bool Direct3D11::Initialize(HWND hWnd)
 	);
 	if (FAILED(hr)) { 
 		ErrorLog("Can't take top back buffer!");
-		return false; /*!< 取得失敗 */
+		return E_FAIL; /*!< 取得失敗 */
 	}
 	
 	/*! レンダーターゲットビューの作成 */
@@ -187,13 +184,13 @@ bool Direct3D11::Initialize(HWND hWnd)
 
 	if (FAILED(hr)) { 
 		ErrorLog("RenderTargetView is not create!");
-		return false;/*!< レンダーターゲットビューの作成に失敗 */
+		return E_FAIL;/*!< レンダーターゲットビューの作成に失敗 */
 	}
 
 	/*! 深度 / ステンシル・テクスチャの設定 */
 	D3D11_TEXTURE2D_DESC descDepth;
-	descDepth.Width					= WINDOW_WIDTH;					/*!< 幅 */
-	descDepth.Height				= WINDOW_HEIGHT;				/*!< 高さ */
+	descDepth.Width					= c_WindowWidth;					/*!< 幅 */
+	descDepth.Height				= c_WindowHeight;				/*!< 高さ */
 	descDepth.MipLevels				= 1;							/*!< ミップマップ・レベル数 */
 	descDepth.ArraySize				= 1;							/*!< 配列サイズ */
 	descDepth.Format				= DXGI_FORMAT_D32_FLOAT;		/*!< フォーマット(深度のみ) */
@@ -216,7 +213,7 @@ bool Direct3D11::Initialize(HWND hWnd)
 	);
 	if (FAILED(hr)) {
 		ErrorLog("StencilTexture is not create!");
-		return false;/*!< ステンシルテクスチャの作成に失敗 */
+		return E_FAIL;/*!< ステンシルテクスチャの作成に失敗 */
 	}
 
 	/*! 深度 / ステンシル・ビュー設定 */
@@ -234,7 +231,7 @@ bool Direct3D11::Initialize(HWND hWnd)
 	);
 	if (FAILED(hr)) {
 		ErrorLog("StencilView is not create!");
-		return false;
+		return E_FAIL;
 	}/*!< 深度 / ステンシル・ビュー作成に失敗 */
 
 	/*! 描画ターゲット・ビューを出力マネージャーのターゲットとして設定 */
@@ -250,7 +247,7 @@ bool Direct3D11::Initialize(HWND hWnd)
 	dc.DepthEnable				= true;									/*!< 深度テスト有り */
 	dc.DepthWriteMask			= D3D11_DEPTH_WRITE_MASK_ALL;			/*!< 書き込む */
 	dc.DepthFunc				= D3D11_COMPARISON_LESS;				/*!< 手前の物体を描画 */
-	dc.StencilEnable			= false;								/*!< ステンシル・テスト無し */
+	dc.StencilEnable			= true;								/*!< ステンシル・テスト無し */
 	dc.StencilReadMask			= D3D11_DEFAULT_STENCIL_READ_MASK;		/*!< ステンシル書き込みマスク */
 	dc.StencilWriteMask			= D3D11_DEFAULT_STENCIL_WRITE_MASK;		/*!< ステンシル読み込みマスク */
 
@@ -272,7 +269,7 @@ bool Direct3D11::Initialize(HWND hWnd)
 	);
 	if (FAILED(hr)) { 
 		ErrorLog("StencilState is not create!");
-		return false; /*!< 深度 /ステンシル・ステート作成失敗 */
+		return E_FAIL; /*!< 深度 /ステンシル・ステート作成失敗 */
 	}
 
 	/*! 深度 /ステンシル・ステート適応 */
@@ -283,8 +280,8 @@ bool Direct3D11::Initialize(HWND hWnd)
 
 	/*! ビューポートの設定 */
 	D3D11_VIEWPORT vp;
-	vp.Width	= WINDOW_WIDTH;		/*!< ビューポート領域の幅 */
-	vp.Height	= WINDOW_HEIGHT;	/*!< ビューポート領域の高さ */
+	vp.Width	= c_WindowWidth;		/*!< ビューポート領域の幅 */
+	vp.Height	= c_WindowHeight;	/*!< ビューポート領域の高さ */
 	vp.MinDepth = 0.0f;				/*!< ビューポート領域の深度最小値(ニア・クリッピング距離) */
 	vp.MaxDepth = 1.0f;				/*!< ビューポート領域の深度最大値(ファー・クリッピング距離) */
 	vp.TopLeftX = 0;				/*!< ビューポート領域の左上x座標 */
@@ -319,7 +316,7 @@ bool Direct3D11::Initialize(HWND hWnd)
 	);
 	if (FAILED(hr)) { 
 		ErrorLog("Rasterizer is not create!");
-		return false;/*!< ラスタライザーステート作成失敗 */
+		return E_FAIL;/*!< ラスタライザーステート作成失敗 */
 	}
 	
 	/*! ラスタライズを設定 */
@@ -365,12 +362,13 @@ bool Direct3D11::Initialize(HWND hWnd)
 //	);
 //
 	/*! 初期化終了 */
-	return true;
+	return S_OK;
 }
 
 /*!
-	@brief	解放
-	@detail	COMの開放
+	@fn		リリース
+	@brief	開放処理
+	@detail	メンバの明示的な開放
 */
 void Direct3D11::Release()
 {
@@ -385,7 +383,9 @@ void Direct3D11::Release()
 }
 
 /*!
-	@brief	描画ターゲットのクリア
+	@fn		クリア
+	@brief	描画のクリア
+	@detail	レンダーターゲットとデプスステンシルビューのクリアを行う
 */
 void Direct3D11::Clear()
 {
@@ -405,8 +405,9 @@ void Direct3D11::Clear()
 }
 
 /*!
-	@brief	画面更新
-	@detail	(バックバッファをフロントバッファに)
+	@fn		画面更新
+	@brief	描画の更新
+	@detail	バックバッファをフロントバッファに切り替える
 */
 void Direct3D11::Present()
 {
@@ -421,7 +422,9 @@ void Direct3D11::Present()
 }
 
 /*!
-	@brief		現在のCOMの生存状況を出力ウィンドウに出力
+	@fn		COMレポートの出力
+	@brief	現在のCOMの生存状況を出力ウィンドウに出力する
+	@detail	デバッグ専用
 	@param[in]	出力ウィンドウに出力するメッセージ(このメッセージを出力後にCOMの生存状況を出力)
 */
 void Direct3D11::ReportCOMs(std::string firstMessage)

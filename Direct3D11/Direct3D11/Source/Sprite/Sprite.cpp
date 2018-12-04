@@ -77,30 +77,40 @@ HRESULT Sprite::Initialize()
 
 	/*! αブレンド */
 	/*! αテスト設定 */
-	D3D11_BLEND_DESC alphaBlend;
-	SecureZeroMemory(&alphaBlend, sizeof(alphaBlend));
+	D3D11_BLEND_DESC bd;
+	SecureZeroMemory(&bd, sizeof(bd));
 
 	/*!< ブレンドの有効・無効 */
-	alphaBlend.RenderTarget[0].BlendEnable		= true;
+	bd.RenderTarget[0].BlendEnable		= true;
 
 	/*! ブレンディング係数の設定 */
-	alphaBlend.RenderTarget[0].SrcBlend			= D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
-	alphaBlend.RenderTarget[0].DestBlend		= D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
-	
+	bd.RenderTarget[0].SrcBlend			= D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
+	bd.RenderTarget[0].DestBlend		= D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
+
+	//
+	bd.RenderTarget[0].SrcBlend = D3D11_BLEND::D3D11_BLEND_ONE;
+	bd.RenderTarget[0].DestBlend = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
+
+
 	/*! ブレンドオプション */
-	alphaBlend.RenderTarget[0].BlendOp			= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
-	alphaBlend.RenderTarget[0].SrcBlendAlpha	= D3D11_BLEND::D3D11_BLEND_ONE;
-	alphaBlend.RenderTarget[0].DestBlendAlpha	= D3D11_BLEND::D3D11_BLEND_ZERO;
-	alphaBlend.RenderTarget[0].BlendOpAlpha		= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
-	alphaBlend.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
+	bd.RenderTarget[0].BlendOp			= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	bd.RenderTarget[0].SrcBlendAlpha	= D3D11_BLEND::D3D11_BLEND_ONE;
+	bd.RenderTarget[0].DestBlendAlpha	= D3D11_BLEND::D3D11_BLEND_ZERO;
+	bd.RenderTarget[0].BlendOpAlpha		= D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
+
+
+	//
+	bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND::D3D11_BLEND_ONE;
+	bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
 
 	/*! アンチエイリアス処理 */
-	//alphaBlend.AlphaToCoverageEnable = true;	/*!< 切り取った部分に対するアンチエイリアス処理の有無 */
-	alphaBlend.IndependentBlendEnable = false;
+	//bd.AlphaToCoverageEnable = true;	/*!< 切り取った部分に対するアンチエイリアス処理の有無 */
+	bd.IndependentBlendEnable = false;
 
 	/*! ブレンドステートの作成 */
 	hr = Direct3D11::GetInstance().GetDevice()->CreateBlendState(
-		&alphaBlend,
+		&bd,
 		m_pBlendState.GetAddressOf()
 	);
 	if (FAILED(hr)) {
@@ -108,6 +118,39 @@ HRESULT Sprite::Initialize()
 		ErrorLog(error);
 		return E_FAIL;
 	}
+
+	////////////////////////////////////////
+		/*!< ブレンドの有効・無効 */
+	bd.RenderTarget[0].BlendEnable = true;
+
+	/*! ブレンディング係数の設定 */
+	bd.RenderTarget[0].SrcBlend = D3D11_BLEND::D3D11_BLEND_ONE;
+	bd.RenderTarget[0].DestBlend = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
+
+	/*! ブレンドオプション */
+	bd.RenderTarget[0].BlendOp = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND::D3D11_BLEND_ONE;
+	bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND::D3D11_BLEND_ZERO;
+	bd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	/*! アンチエイリアス処理 */
+	//bd.AlphaToCoverageEnable = true;	/*!< 切り取った部分に対するアンチエイリアス処理の有無 */
+	bd.IndependentBlendEnable = false;
+
+	/*! ブレンドステートの作成 */
+	hr = Direct3D11::GetInstance().GetDevice()->CreateBlendState(
+		&bd,
+		m_pBlendStateMultiple.GetAddressOf()
+	);
+	if (FAILED(hr)) {
+		std::string error = "BlendState is not create!";
+		ErrorLog(error);
+		return E_FAIL;
+	}
+
+
+	////////////////////////////////////////
 
 	/*! ブレンドステートの設定 */
 	Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(

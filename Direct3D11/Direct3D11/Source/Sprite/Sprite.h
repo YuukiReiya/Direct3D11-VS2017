@@ -155,6 +155,7 @@ namespace API{
 			uint32_t									m_StencilMask;
 			Microsoft::WRL::ComPtr<ID3D11Buffer>		m_pVertexBuffer;
 			Microsoft::WRL::ComPtr<ID3D11BlendState>	m_pBlendState;
+			Microsoft::WRL::ComPtr<ID3D11BlendState>	m_pBlendStateMultiple;
 
 			/****************************************/
 			/*		　スプライトのパラメータ		*/

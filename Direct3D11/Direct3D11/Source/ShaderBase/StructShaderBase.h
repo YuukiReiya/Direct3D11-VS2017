@@ -30,8 +30,8 @@ namespace D3D11 {
 				@brief	エイリアステンプレートを用いた別名定義
 			*/
 			template<typename alignType>
-			using ALIGN16 = __declspec(align(16)) alignType;/*!< 16バイト境界に型を設定するための別名 */
-
+			//using ALIGN16 = __declspec(align(16)) alignType;/*!< 16バイト境界に型を設定するための別名 */
+			using ALIGN16 = alignType;/*!< 16バイト境界に型を設定するための別名 */
 			/*! メンバの行列 */
 			//ALIGN16<DirectX::XMMATRIX>m_WorldMatrix;		/*!< ワールド */
 			//ALIGN16<DirectX::XMMATRIX>m_ProjectionMatrix;	/*!< 射影行列 */

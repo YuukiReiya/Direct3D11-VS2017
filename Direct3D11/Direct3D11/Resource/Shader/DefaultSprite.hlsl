@@ -9,7 +9,6 @@ cbuffer global
 	float2 g_DivNum;		/*!< テクスチャの分割数 */
 	float2 g_useIndexUV;	/*!< 分割したテクスチャの描画インデックス */
 	float4 g_Color;			/*!< カラー */
-	//float  g_Alpha;
 };
 //構造体
 struct PS_INPUT
@@ -66,5 +65,5 @@ float4 PS( PS_INPUT Input ) : SV_Target
 		if (color.a <= 0.0f)discard;
 	}
 
-	return color;
+	return (g_Color * g_Texture.Sample(g_Sampler, Input.UV)) * 1.0;
 }

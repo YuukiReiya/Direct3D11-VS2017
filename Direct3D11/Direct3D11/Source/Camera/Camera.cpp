@@ -72,7 +72,7 @@ void Camera::Initialize(DirectX::XMFLOAT3 eyePt, DirectX::XMFLOAT3 lookPt, Direc
 	{
 		m_ProjMat = DirectX::XMMatrixPerspectiveFovLH(
 			m_FieldOfView,															/*!< 視野角 */
-			static_cast<float>(WINDOW_WIDTH) / static_cast<float>(WINDOW_HEIGHT),	/*!< アスペクト比 */
+			static_cast<float>(c_WindowWidth) / static_cast<float>(c_WindowHeight),	/*!< アスペクト比 */
 			m_NearClip,																/*!< クリッピング距離:近 */
 			m_FarClip																/*!< クリッピング距離:遠 */
 		);

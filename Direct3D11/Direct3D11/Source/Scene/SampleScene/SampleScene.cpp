@@ -39,14 +39,19 @@ void SampleScene::Initialize()
 {
 	m_pTex = make_unique<Texture>();
 	m_pSprite2 = make_unique<Sprite>();
-	//m_pTex2 = make_unique<Texture>();
+	m_pTex2 = make_unique<Texture>();
+	m_pSprite3 = make_unique<Sprite>();
 
 	m_pSprite = make_unique<Sprite>();
 	m_pSprite->Initialize();
 	m_pSprite2->Initialize();
+	m_pSprite3->Initialize();
 	//m_pTex->Initialize("image.jpg", { 308,163 },API::ITexture::Wrap);
-	m_pTex->Initialize("test.png", { 308,163 }, API::ITexture::Wrap);
-	//m_pTex2->Initialize("test.png", { 256,256 });
+	//m_pTex->Initialize("test.png", { 308,163 }, API::ITexture::Wrap);
+	m_pTex->Initialize("red.png", { 800,600 });
+	m_pTex2->Initialize("blue.png", { 800,600 });
+
+
 
 	m_pWav = make_unique<Wave>();
 	////m_pWav->Load("07 フォーチュンナンバー0405.wav");
@@ -103,7 +108,7 @@ Scene * SampleScene::Update(SceneRoot * root)
 	m_pSprite.get()->SetScale(scale);
 	//m_pSprite.get()->SetRot(angle);
 
-	auto& cr = m_pTex->m_Color;
+	auto& cr = m_pTexA->m_Color;
 
 	if (GetButton('R')) {
 		cr.x += 0.01f;
@@ -169,6 +174,7 @@ void SampleScene::Render()
 
 	//m_pSprite2->Render(m_pTexA.get());
 	//m_pSprite2->SetPos({ 0,0,-0.1 });
-	m_pSprite->Render(m_pTexA.get());
-	m_pSprite2->RenderTile(m_pTex.get(), {2,5});
+	m_pSprite3->Render(m_pTexA.get());
+	m_pSprite->Render(m_pTex.get());
+	m_pSprite2->Render(m_pTex2.get());
 }
