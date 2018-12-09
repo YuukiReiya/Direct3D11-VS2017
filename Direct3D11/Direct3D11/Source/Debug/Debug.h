@@ -34,7 +34,7 @@
 	@brief	スプライトクラスのデバッグシンボル
 	@detail	スプライトクラスのデバッグ処理の有効化
 */
-#define DEBUG_SPRITE
+//#define DEBUG_SPRITE
 
 /*!
 	@def	DEBUG_TEXTURE

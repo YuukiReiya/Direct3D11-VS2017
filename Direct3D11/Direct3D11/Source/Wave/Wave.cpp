@@ -7,7 +7,7 @@
 #include "Wave.h"
 #include "../MyGame.h"
 #include "../MemoryLeaks.h"
-#include "../Audio/AudioDevice.h"
+#include "../Audio/AudioMaster.h"
 
 /*!
 	@brief	名前空間
@@ -33,17 +33,23 @@ Wave::~Wave()
 }
 
 /*!
-	@brief	イニシャライズ
+	@fn		イニシャライズ
+	@brief	初期化
+	@detail	セキュアゼロメモリ
+	@return	S_OK:成功 E_FAIL:失敗
 */
-HRESULT Wave::Initialize() 
+HRESULT Wave::Initialize()
 {
 	SecureZeroMemory(this, sizeof(this));
 	return S_OK;
 }
 
 /*!
-	@brief		Waveファイル読み込み
+	@fn			ロード
+	@brief		ファイルのロード
+	@detail		Waveファイル読み込み
 	@param[in]	読み込むファイルのパス
+	@return		true:成功 false:失敗
 */
 bool Wave::Load(std::string filePath)
 {
@@ -89,7 +95,7 @@ bool Wave::Load(std::string filePath)
 	mmioRead(hMmio, (char*)m_pWaveBuffer, waveSize);
 
 	/*! オーディオデバイスの参照 */
-	auto& manager = AudioDevice::GetInstance();
+	auto& manager = AudioMaster::GetInstance();
 
 	/*! ソースボイスにデータ詰め込み */
 	XAUDIO2_SEND_DESCRIPTOR sendDescriptor;
@@ -112,23 +118,18 @@ bool Wave::Load(std::string filePath)
 }
 
 /*!
-	@brief	ファイナライズ
+	@fn		ファイナライズ
+	@brief	破棄処理
+	@detail	メンバの明示的な解放
 */
-void Wave::Finalize() 
-{
-	Release();/*!< メモリ開放 */
-}
-
-/*!
-	@brief	解放
-*/
-void Wave::Release()
+void Wave::Finalize()
 {
 	SAFE_DELETE(m_pWaveBuffer);
 }
 
 /*!
-	@brief		再生
+	@fn			プレイ
+	@brief		音の再生
 	@detail		一時停止、停止後の"再生"もこれを使う
 	@param[in]	ループフラグ
 */
@@ -161,7 +162,8 @@ void Wave::Play(bool isLoop)
 }
 
 /*!
-	@brief	停止
+	@fn		ストップ
+	@brief	音の停止
 */
 void Wave::Stop()
 {
@@ -170,7 +172,8 @@ void Wave::Stop()
 }
 
 /*!
-	@brief	一時停止
+	@fn		ポーズ
+	@brief	音の一時停止
 */
 void API::Wave::Pause()
 {
@@ -187,9 +190,3 @@ void API::Wave::SetVolume(float vol)
 {
 	m_pSourceVoice->SetVolume(vol);
 }
-
-const float API::Wave::GetVolume() const
-{
-	return 0.0f;
-}
-

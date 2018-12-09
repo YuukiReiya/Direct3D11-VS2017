@@ -71,46 +71,6 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 	@detail		画像の読み込みと分割数の指定を行い、サンプラーステートの作成を行う
 	@param[in]	画像のパス
 	@param[in]	分割数(x,y)
-	@param[in]	タイリングモードの設定
-	@return		成功:S_OK 失敗:E_FAIL
-*/
-HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMFLOAT2 divNum, const TileMode tileMode)
-{
-	return Initialize(filePath, divNum, tileMode, m_eFilterMode);
-}
-
-/*!
-	@fn			イニシャライズ
-	@brief		初期化
-	@detail		画像の読み込みと分割数の指定を行い、サンプラーステートの作成を行う
-	@param[in]	画像のパス
-	@param[in]	表示する画像サイズ
-				※分割前の画像サイズでないことに注意
-	@param[in]	分割数(x,y)
-	@param[in]	タイリングモードの設定
-	@return		成功:S_OK 失敗:E_FAIL
-*/
-HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT2 size, const DirectX::XMFLOAT2 divNum, const TileMode tileMode)
-{
-	HRESULT hr;
-
-	/*! 初期化 */
-	hr = Initialize(filePath, divNum, tileMode);
-	if (FAILED(hr)) {
-		return hr;
-	}
-
-	/*! サイズの設定 */
-	hr = SetSize(size) ? S_OK : E_FAIL;
-	return hr;
-}
-
-/*!
-	@fn			イニシャライズ
-	@brief		初期化
-	@detail		画像の読み込みと分割数の指定を行い、サンプラーステートの作成を行う
-	@param[in]	画像のパス
-	@param[in]	分割数(x,y)
 	@param[in]	フィルタリングモードの設定
 	@return		成功:S_OK 失敗:E_FAIL
 */
@@ -203,14 +163,34 @@ HRESULT API::TextureAtlas::Initialize(std::string filePath, const DirectX::XMINT
 {
 	HRESULT hr;
 
-	/*! 初期化 */
-	hr = Initialize(filePath, divNum, tileMode, filterMode);
+	/*! 画像のロード */
+	hr = Load(filePath);
 	if (FAILED(hr)) {
-		return hr;
+		std::string error = "\"" + filePath + "\" is not load in texture atlas!";
+		ErrorLog(error);
+		return E_FAIL;
 	}
+
+	/*! タイリングモード */
+	m_eFilterMode = filterMode;
+
+	/*! フィルタリングモード */
+	m_eTileMode = tileMode;
+
+	/*! タイリングとフィルタリングを設定し、サンプラーステートを作成 */
+	hr = SetTileAndFiltering(m_eTileMode, m_eFilterMode);
+	if (FAILED(hr)) {
+		std::string error = "\"" + filePath + "\" is not load in texture atlas!\n";
+		ErrorLog(error);
+		return E_FAIL;
+	}
+
+	/*! 分割数の設定 */
+	m_DivNum = divNum;
 
 	/*! サイズの設定 */
 	hr = SetSize(size) ? S_OK : E_FAIL;
+
 	return hr;
 }
 

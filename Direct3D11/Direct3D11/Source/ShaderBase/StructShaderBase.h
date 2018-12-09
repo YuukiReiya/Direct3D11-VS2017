@@ -7,6 +7,7 @@
 #pragma once
 #include <DirectXMath.h>
 
+
 /*! Direct3D11関連の名前空間 */
 namespace D3D11 {
 
@@ -24,11 +25,17 @@ namespace D3D11 {
 		/*!
 			@brief	シェーダー側に渡すコンスタントバッファの基底構造体
 		*/
+#pragma pack(push,16)
+
+		/*!
+			@brief	packマクロに変更
+		*/
 		struct CONSTANT_BUFFER_BASE
 		{
 			/*!
 				@brief	エイリアステンプレートを用いた別名定義
 			*/
+			
 			template<typename alignType>
 			//using ALIGN16 = __declspec(align(16)) alignType;/*!< 16バイト境界に型を設定するための別名 */
 			using ALIGN16 = alignType;/*!< 16バイト境界に型を設定するための別名 */
@@ -38,5 +45,6 @@ namespace D3D11 {
 			//ALIGN16<DirectX::XMMATRIX>m_ViewMatrix;			/*!< ビュー行列 */
 			ALIGN16<DirectX::XMMATRIX>m_WVP;
 		};
+#pragma pack(pop)
 	};
 };

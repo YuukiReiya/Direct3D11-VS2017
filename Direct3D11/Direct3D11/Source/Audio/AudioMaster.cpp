@@ -1,10 +1,10 @@
 /*
-	@file	SoundManager.cpp
+	@file	AudioMaster.cpp
 	@date	2018/03/02
 	@author	番場 宥輝
 	@brief	サウンド管理クラス
 */
-#include "AudioDevice.h"
+#include "AudioMaster.h"
 #include "../MyGame.h"
 #include "../MemoryLeaks.h"
 
@@ -17,14 +17,14 @@ using namespace D3D11::Sound;
 /*!
 	@brief	コンストラクタ
 */
-AudioDevice::AudioDevice()
+AudioMaster::AudioMaster()
 {
 }
 
 /*!
 	@brief	デストラクタ
 */
-AudioDevice::~AudioDevice()
+AudioMaster::~AudioMaster()
 {
 	Finalize();
 }
@@ -32,7 +32,7 @@ AudioDevice::~AudioDevice()
 /*!
 	@brief	初期化
 */
-HRESULT AudioDevice::Initialize()
+HRESULT AudioMaster::Initialize()
 {
 	/*! COMライブラリの初期化 */
 	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED))) {
@@ -61,16 +61,7 @@ HRESULT AudioDevice::Initialize()
 /*!
 	@brief	破棄
 */
-void AudioDevice::Finalize()
-{
-	Release();
-
-}
-
-/*!
-	@brief	メンバの解放
-*/
-void AudioDevice::Release()
+void AudioMaster::Finalize()
 {
 	if (m_pMasteringVoice) { m_pMasteringVoice->DestroyVoice(); m_pMasteringVoice = nullptr; }
 	if (m_pXAudio2) { m_pXAudio2->Release(); m_pXAudio2 = nullptr; }

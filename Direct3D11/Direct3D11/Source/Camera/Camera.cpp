@@ -9,7 +9,7 @@
 #include "../Direct3D11/Direct3D11.h"
 
 /*!
-	@def	定数宣言
+	@var	定数宣言
 */
 const double Camera::			c_Pi			= 3.14159265358979323846;					/*!< 円周率π ※D3DX_PIと同値 */
 const float Camera::			c_FieldOfView	= static_cast<float>(Camera::c_Pi) / 4.0f;	/*!< デフォルトの視野角(45度) */
@@ -80,7 +80,9 @@ void Camera::Initialize(DirectX::XMFLOAT3 eyePt, DirectX::XMFLOAT3 lookPt, Direc
 }
 
 /*!
-	@brief	カメラの視点を返す
+	@fn		視点位置のゲッター
+	@brief	視点位置の取得
+	@return	視点位置
 */
 DirectX::XMFLOAT3 Camera::GetEyePt() const
 {
@@ -91,7 +93,9 @@ DirectX::XMFLOAT3 Camera::GetEyePt() const
 }
 
 /*!
-	@brief	カメラの注視点を返す
+	@fn		注視点のゲッター
+	@brief	注視点の取得
+	@return	注視点
 */
 DirectX::XMFLOAT3 Camera::GetLookAtPt() const
 {

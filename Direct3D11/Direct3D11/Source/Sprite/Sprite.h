@@ -13,7 +13,6 @@
 #include "../IRenderer/IRenderer.h"
 #include "../Texture/Texture.h"
 #include "../TextureAtlas/TextureAtlas.h"
-#include "../Color/Color.h"
 
 /*! APIの名前空間に含める */
 namespace API{
@@ -79,19 +78,20 @@ namespace API{
 				@detail		頂点情報のUVを範囲外にすることで実現
 							※比率の維持を優先しているため、別途大きさを変更する必要がある
 				@param[in]	描画するテクスチャ
-				@param[in]	タイルする割合
+				@param[in]	タイル表示する割合
 				@return		成功:S_OK 失敗:E_FAIL
 			*/
 			HRESULT RenderTile(Texture* pTexture, const DirectX::XMFLOAT2 ratio);
 
-
+			//----------------------------------------------------------------------------------------
+			/*! Transformクラスに書き直す予定 */
 			DirectX::XMFLOAT3 GetPos()const { return m_Pos; }
-
 			void SetPos(DirectX::XMFLOAT3 pos);
 			void SetPos(DirectX::XMFLOAT2 pos);
 			void SetRot(DirectX::XMFLOAT3 rot) { m_Rot.x = rot.x, m_Rot.y = rot.y, m_Rot.z = rot.z; }
 			void SetScale(DirectX::XMFLOAT2 scale);
 			void SetStencilMask(uint32_t mask) { m_StencilMask = mask; }
+			//----------------------------------------------------------------------------------------
 
 			/*!
 				@fn			ブレンドステートの作成
@@ -161,13 +161,12 @@ namespace API{
 			/*		　スプライトのパラメータ		*/
 			/****************************************/
 
-
 			/*! ローカル座標系 */
 			DirectX::XMFLOAT3 m_Pos;
 			DirectX::XMFLOAT3 m_Rot;
 			DirectX::XMFLOAT3 m_Scale;
 		private:
-			/*! スプライトの */
+			/*! スプライトサイズのキャッシュ */
 			DirectX::XMINT2 m_Size;
 	};
 
@@ -195,6 +194,7 @@ namespace D3D11 {
 			DirectX::XMFLOAT2 m_UV;/*< UV座標 */
 		};
 
+#pragma pack(push,16)
 		/*!
 			@brief	スプライトのコンスタントバッファ構造体
 		*/
@@ -205,5 +205,6 @@ namespace D3D11 {
 			ALIGN16<DirectX::XMFLOAT2>	m_Index;
 			ALIGN16<DirectX::XMFLOAT4>	m_Color;	/*< カラー */
 		};
+#pragma pack(pop)
 	}
 }

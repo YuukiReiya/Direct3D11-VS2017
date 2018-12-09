@@ -35,6 +35,7 @@ SampleScene::~SampleScene()
 /*!
 	@brief	èâä˙âª
 */
+#include "../../Camera/Camera.h"
 void SampleScene::Initialize()
 {
 	m_pTex = make_unique<Texture>();
@@ -49,7 +50,7 @@ void SampleScene::Initialize()
 	//m_pTex->Initialize("image.jpg", { 308,163 },API::ITexture::Wrap);
 	//m_pTex->Initialize("test.png", { 308,163 }, API::ITexture::Wrap);
 	m_pTex->Initialize("red.png", { 800,600 });
-	m_pTex2->Initialize("blue.png", { 800,600 });
+	m_pTex2->Initialize("at.png", { 320,320 });
 
 
 
@@ -63,7 +64,7 @@ void SampleScene::Initialize()
 
 
 	m_pTexA = make_unique<TextureAtlas>();
-	m_pTexA->Initialize("at.png", { 3,4 },API::ITexture::Wrap);
+	m_pTexA->Initialize("at.png", { 3,4 });
 	
 
 	//m_pTexA->SetSize({ 100,100 });
@@ -174,7 +175,8 @@ void SampleScene::Render()
 
 	//m_pSprite2->Render(m_pTexA.get());
 	//m_pSprite2->SetPos({ 0,0,-0.1 });
-	m_pSprite3->Render(m_pTexA.get());
+	m_pSprite2->RenderTile(m_pTex2.get(), { 2,1 });
+	m_pSprite->Render(m_pTexA.get());
 	m_pSprite->Render(m_pTex.get());
-	m_pSprite2->Render(m_pTex2.get());
+	//m_pSprite->Render(m_pTex2.get());
 }

@@ -68,7 +68,7 @@ HRESULT ShaderManager::Initialize()
 		/*! 頂点インプットレイアウト定義 */
 		D3D11_INPUT_ELEMENT_DESC layout[] = {
 			{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		};
 		uint32_t numElements = sizeof(layout) / sizeof(*layout);/*!< ポインタ */
 
@@ -78,7 +78,7 @@ HRESULT ShaderManager::Initialize()
 			numElements,
 			pCompiledShader->GetBufferPointer(),
 			pCompiledShader->GetBufferSize(),
-			&m_pAddDataRef->m_pVertexLayout
+			m_pAddDataRef->m_pVertexLayout.GetAddressOf()
 		);
 		if (FAILED(hr)) {
 			ErrorLog("\"SimpleTextureShader\" input layout is not create!");

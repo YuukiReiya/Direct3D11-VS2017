@@ -9,7 +9,7 @@
 #include "../Direct3D11/Direct3D11.h"
 #include "../MyGame.h"
 #include "../MemoryLeaks.h"
-#include "../Audio/AudioDevice.h"
+#include "../Audio/AudioMaster.h"
 #include "../ShaderManager/ShaderManager.h"
 #include "../Camera/Camera.h"
 #include "../Debug/Debug.h"
@@ -102,7 +102,7 @@ void Main::Release()
 	Direct3D11::GetInstance().Release();
 
 	/*! オーディオデバイスの開放 */
-	AudioDevice::GetInstance().Finalize();
+	AudioMaster::GetInstance().Finalize();
 }
 
 /*!	
@@ -113,7 +113,7 @@ void Main::Loop()
 	HRESULT hr;
 
 	/*! オーディオデバイスの初期化 */
-	hr = AudioDevice::GetInstance().Initialize();
+	hr = AudioMaster::GetInstance().Initialize();
 	if (FAILED(hr)) {
 		return;
 	}
@@ -133,7 +133,7 @@ void Main::Loop()
 
 	/*! メッセージループ */
 	MSG msg{ 0 };
-	SecureZeroMemory(&msg, sizeof(&msg));
+	SecureZeroMemory(&msg, sizeof(msg));
 	while (msg.message != WM_QUIT)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))

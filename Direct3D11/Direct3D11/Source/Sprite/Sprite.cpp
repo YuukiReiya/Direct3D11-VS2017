@@ -37,7 +37,6 @@ Sprite::Sprite()
 	m_pVertexBuffer		= nullptr;
 	m_pBlendState		= nullptr;
 	m_Pos = { 0,0,0 };
-	//m_Color = { 1,1,1,1 };
 	m_Scale = { 1,1 ,0 };
 	m_Rot = {0,0,0};
 	m_Size = { -1,-1 };
@@ -118,39 +117,6 @@ HRESULT Sprite::Initialize()
 		ErrorLog(error);
 		return E_FAIL;
 	}
-
-	////////////////////////////////////////
-		/*!< ブレンドの有効・無効 */
-	bd.RenderTarget[0].BlendEnable = true;
-
-	/*! ブレンディング係数の設定 */
-	bd.RenderTarget[0].SrcBlend = D3D11_BLEND::D3D11_BLEND_ONE;
-	bd.RenderTarget[0].DestBlend = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
-
-	/*! ブレンドオプション */
-	bd.RenderTarget[0].BlendOp = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
-	bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND::D3D11_BLEND_ONE;
-	bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND::D3D11_BLEND_ZERO;
-	bd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
-	bd.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
-
-	/*! アンチエイリアス処理 */
-	//bd.AlphaToCoverageEnable = true;	/*!< 切り取った部分に対するアンチエイリアス処理の有無 */
-	bd.IndependentBlendEnable = false;
-
-	/*! ブレンドステートの作成 */
-	hr = Direct3D11::GetInstance().GetDevice()->CreateBlendState(
-		&bd,
-		m_pBlendStateMultiple.GetAddressOf()
-	);
-	if (FAILED(hr)) {
-		std::string error = "BlendState is not create!";
-		ErrorLog(error);
-		return E_FAIL;
-	}
-
-
-	////////////////////////////////////////
 
 	/*! ブレンドステートの設定 */
 	Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(
@@ -397,6 +363,9 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 		return E_FAIL;
 	}
 
+	/*! テクスチャのサイズをキャッシュしておく */
+	m_Size = size;
+
 	/*! トポロジーセット */
 	Direct3D11::GetInstance().GetDeviceContext()->IASetPrimitiveTopology(
 		D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
@@ -485,16 +454,7 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 		NULL
 	);
 
-	/*! 頂点バッファセット */
-	uint32_t stride = sizeof(SpriteVertex);
-	uint32_t offset = 0;
-	Direct3D11::GetInstance().GetDeviceContext()->IASetVertexBuffers(
-		0,
-		1,
-		m_pVertexBuffer.GetAddressOf(),
-		&stride,
-		&offset
-	);
+
 
 	/*! ブレンドステートの設定 */
 	Direct3D11::GetInstance().GetDeviceContext()->OMSetBlendState(
@@ -519,7 +479,7 @@ HRESULT API::Sprite::Render(TextureAtlas * pTexture)
 	@detail		頂点情報のUVを範囲外にすることで実現
 				描画サイズはテクスチャのサイズに依存する
 	@param[in]	描画するテクスチャ
-	@param[in]	タイルする割合
+	@param[in]	タイル表示する割合
 	@return		成功:S_OK 失敗:E_FAIL
 */
 HRESULT API::Sprite::RenderTile(Texture * pTexture, const DirectX::XMFLOAT2 ratio)
@@ -535,6 +495,9 @@ HRESULT API::Sprite::RenderTile(Texture * pTexture, const DirectX::XMFLOAT2 rati
 		ErrorLog(error);
 		return E_FAIL;
 	}
+
+	/*! テクスチャのサイズをキャッシュしておく */
+	m_Size = size;
 
 	/*! トポロジーセット */
 	Direct3D11::GetInstance().GetDeviceContext()->IASetPrimitiveTopology(
@@ -609,7 +572,7 @@ HRESULT API::Sprite::RenderTile(Texture * pTexture, const DirectX::XMFLOAT2 rati
 	const Color& color = pTexture->m_Color;
 	DirectX::XMMATRIX m = mWorld * camera->GetViewMatrix()*camera->GetProjMatrix();
 
-	cb.m_WVP = m;				/*!< ワールド行列 */
+	cb.m_WVP = m;					/*!< ワールド行列 */
 	cb.m_DivNum = { 1,1 };
 	cb.m_Index = { 0,0 };
 	cb.m_Color = color.GetRGBA();
@@ -762,6 +725,18 @@ HRESULT Sprite::CreateVertex(DirectX::XMINT2 size)
 		ErrorLog(error);
 		return E_FAIL;
 	}
+
+	/*! 頂点バッファセット */
+	uint32_t stride = sizeof(SpriteVertex);
+	uint32_t offset = 0;
+	Direct3D11::GetInstance().GetDeviceContext()->IASetVertexBuffers(
+		0,
+		1,
+		m_pVertexBuffer.GetAddressOf(),
+		&stride,
+		&offset
+	);
+
 	return S_OK;
 }
 

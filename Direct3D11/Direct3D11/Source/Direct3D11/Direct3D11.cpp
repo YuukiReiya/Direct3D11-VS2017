@@ -62,7 +62,7 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 	DXGI_SWAP_CHAIN_DESC sd;
 	SecureZeroMemory(&sd, sizeof(sd));
 	sd.BufferCount							= 1;							/*!< バック・バッファ数 */
-	sd.BufferDesc.Width						= c_WindowWidth;					/*!< バック・バッファの幅 */
+	sd.BufferDesc.Width						= c_WindowWidth;				/*!< バック・バッファの幅 */
 	sd.BufferDesc.Height					= c_WindowHeight;				/*!< バック・バッファの高さ */
 	sd.BufferDesc.Format					= DXGI_FORMAT_R8G8B8A8_UNORM;	/*!< フォーマット */
 	sd.BufferDesc.RefreshRate.Numerator		= 60;							/*!< リフレッシュ・レート(分子) */
@@ -187,8 +187,48 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 		return E_FAIL;/*!< レンダーターゲットビューの作成に失敗 */
 	}
 
+	/*! 深度テクスチャ / ステンシルビュー / ステンシルステートの作成 */
+	/*! 深度 /ステンシル・ステート設定 */
+	D3D11_DEPTH_STENCIL_DESC dc;
+	SecureZeroMemory(&dc, sizeof(dc));
+	dc.DepthEnable = true;									/*!< 深度テスト有り */
+	dc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;			/*!< 書き込む */
+	dc.DepthFunc = D3D11_COMPARISON_LESS;				/*!< 手前の物体を描画 */
+	dc.StencilEnable = true;								/*!< ステンシル・テスト無し */
+	dc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;		/*!< ステンシル書き込みマスク */
+	dc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;		/*!< ステンシル読み込みマスク */
+
+	/*! 面が表を向いている場合のステンシル・テストの設定 */
+	dc.FrontFace.StencilFailOp		= D3D11_STENCIL_OP_KEEP;		/*!< ステンシルテストが失敗した時に実行されるステンシル処理 */
+	dc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;		/*!< ステンシルテストが合格で深度テストが不合格の場合に実行される処理 */
+	dc.FrontFace.StencilPassOp		= D3D11_STENCIL_OP_KEEP;		/*!< ステンシルテストと深度テストの両方が合格の場合に実行されるステンシル処理 */
+	dc.FrontFace.StencilFunc		= D3D11_COMPARISON_ALWAYS;		/*!< 既存のデータに対するデータの比較方法 */
+	/*! 面が裏を向いている場合のステンシル・テストの設定 */
+	dc.BackFace.StencilFailOp		= D3D11_STENCIL_OP_KEEP;		/*!< ステンシルテストが失敗した時に実行されるステンシル処理 */
+	dc.BackFace.StencilDepthFailOp	= D3D11_STENCIL_OP_KEEP;		/*!< ステンシルテストが合格で深度テストが不合格の場合に実行される処理 */
+	dc.BackFace.StencilPassOp		= D3D11_STENCIL_OP_KEEP;		/*!< ステンシルテストと深度テストの両方が合格の場合に実行されるステンシル処理 */
+	dc.BackFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;		/*!< 既存のデータに対するデータの比較方法 */
+
+	/*! 深度 /ステンシル・ステート作成 */
+	hr = m_pDevice->CreateDepthStencilState(
+		&dc,								/*!< 深度 /ステンシル・ステート設定情報 */
+		m_pDepthStencilState.GetAddressOf()	/*!< 作成した 深度 /ステンシル・ステートを受け取る変数 */
+	);
+	if (FAILED(hr)) {
+		ErrorLog("StencilState is not create!");
+		return E_FAIL; /*!< 深度 /ステンシル・ステート作成失敗 */
+	}
+
+	/*! 深度 /ステンシル・ステート適応 */
+	m_pDeviceContext->OMSetDepthStencilState(
+		m_pDepthStencilState.Get(),		/*!< 深度 /ステンシル・ステート */
+		1								/*!< ステンシル・テストで参照値 */
+	);
+
+
 	/*! 深度 / ステンシル・テクスチャの設定 */
 	D3D11_TEXTURE2D_DESC descDepth;
+	SecureZeroMemory(&descDepth, sizeof(descDepth));
 	descDepth.Width					= c_WindowWidth;					/*!< 幅 */
 	descDepth.Height				= c_WindowHeight;				/*!< 高さ */
 	descDepth.MipLevels				= 1;							/*!< ミップマップ・レベル数 */
@@ -218,9 +258,10 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 
 	/*! 深度 / ステンシル・ビュー設定 */
 	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-	descDSV.Format				= descDepth.Format;					/*!< ビューのフォーマット */
+	SecureZeroMemory(&descDSV, sizeof(descDSV));
+	descDSV.Format				= DXGI_FORMAT_D32_FLOAT;					/*!< ビューのフォーマット */
 	descDSV.ViewDimension		= D3D11_DSV_DIMENSION_TEXTURE2D;	/*!< リソースの種類 */
-	descDSV.Flags				= 0;								/*!< テクスチャのアクセス権 0:RW(読み込み書き込み)  */
+	//descDSV.Flags				= 0;								/*!< テクスチャのアクセス権 0:RW(読み込み書き込み)  */
 	descDSV.Texture2D.MipSlice	= 0;								
 
 	/*! 深度 / ステンシル・テクスチャに対しビューを作成 */
@@ -241,51 +282,15 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 		m_pDepthStencilView.Get()			/*!< 深度 / ステンシルビュー */
 	);
 
-	/*! 深度 /ステンシル・ステート設定 */
-	D3D11_DEPTH_STENCIL_DESC dc;
-	SecureZeroMemory(&dc, sizeof(dc));
-	dc.DepthEnable				= true;									/*!< 深度テスト有り */
-	dc.DepthWriteMask			= D3D11_DEPTH_WRITE_MASK_ALL;			/*!< 書き込む */
-	dc.DepthFunc				= D3D11_COMPARISON_LESS;				/*!< 手前の物体を描画 */
-	dc.StencilEnable			= true;								/*!< ステンシル・テスト無し */
-	dc.StencilReadMask			= D3D11_DEFAULT_STENCIL_READ_MASK;		/*!< ステンシル書き込みマスク */
-	dc.StencilWriteMask			= D3D11_DEFAULT_STENCIL_WRITE_MASK;		/*!< ステンシル読み込みマスク */
-
-	/*! 面が表を向いている場合のステンシル・テストの設定 */
-	dc.FrontFace.StencilFailOp			= D3D11_STENCIL_OP_KEEP;		/*!< 維持 */
-	dc.FrontFace.StencilDepthFailOp		= D3D11_STENCIL_OP_KEEP;		/*!< 維持 */
-	dc.FrontFace.StencilPassOp			= D3D11_STENCIL_OP_KEEP;		/*!< 維持 */
-	dc.FrontFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;		/*!< 常時 */
-	/*! 面が裏を向いている場合のステンシル・テストの設定 */
-	dc.BackFace.StencilFailOp			= D3D11_STENCIL_OP_KEEP;		/*!< 維持 */
-	dc.BackFace.StencilDepthFailOp		= D3D11_STENCIL_OP_KEEP;		/*!< 維持 */
-	dc.BackFace.StencilPassOp			= D3D11_STENCIL_OP_KEEP;		/*!< 維持 */
-	dc.BackFace.StencilFunc				= D3D11_COMPARISON_ALWAYS;		/*!< 常時 */
-
-	/*! 深度 /ステンシル・ステート作成 */
-	hr = m_pDevice->CreateDepthStencilState(
-		&dc,								/*!< 深度 /ステンシル・ステート設定情報 */
-		m_pDepthStencilState.GetAddressOf()	/*!< 作成した 深度 /ステンシル・ステートを受け取る変数 */
-	);
-	if (FAILED(hr)) { 
-		ErrorLog("StencilState is not create!");
-		return E_FAIL; /*!< 深度 /ステンシル・ステート作成失敗 */
-	}
-
-	/*! 深度 /ステンシル・ステート適応 */
-	m_pDeviceContext->OMSetDepthStencilState(
-		m_pDepthStencilState.Get(),		/*!< 深度 /ステンシル・ステート */
-		0								/*!< ステンシル・テストで参照値 */
-	);
-
 	/*! ビューポートの設定 */
 	D3D11_VIEWPORT vp;
+	SecureZeroMemory(&vp, sizeof(vp));
 	vp.Width	= c_WindowWidth;		/*!< ビューポート領域の幅 */
 	vp.Height	= c_WindowHeight;	/*!< ビューポート領域の高さ */
-	vp.MinDepth = 0.0f;				/*!< ビューポート領域の深度最小値(ニア・クリッピング距離) */
+	//vp.MinDepth = 0.0f;				/*!< ビューポート領域の深度最小値(ニア・クリッピング距離) */
 	vp.MaxDepth = 1.0f;				/*!< ビューポート領域の深度最大値(ファー・クリッピング距離) */
-	vp.TopLeftX = 0;				/*!< ビューポート領域の左上x座標 */
-	vp.TopLeftY = 0;				/*!< ビューポート領域の左上y座標 */
+	//vp.TopLeftX = 0;				/*!< ビューポート領域の左上x座標 */
+	//vp.TopLeftY = 0;				/*!< ビューポート領域の左上y座標 */
 	m_pDeviceContext->RSSetViewports(
 		1,			/*!< ビューポートの数 */
 		&vp			/*!< 設定するビューポート配列 */
@@ -293,6 +298,7 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 
 	/*! ラスタライズ設定 */
 	D3D11_RASTERIZER_DESC rd;
+	SecureZeroMemory(&rd, sizeof(rd));
 	rd.FillMode					= D3D11_FILL_SOLID;	/*!< 普通に描画 */
 	//rd.FillMode					= D3D11_FILL_WIREFRAME;	/*!< ワイヤーフレーム描画 */
 	rd.CullMode					= D3D11_CULL_NONE;	/*!< 両面を描画 */
@@ -322,45 +328,6 @@ HRESULT Direct3D11::Initialize(HWND hWnd)
 	/*! ラスタライズを設定 */
 	m_pDeviceContext->RSSetState(m_pRasterizerState.Get());
 
-	/*! αブレンド用ブレンドステート作成 */
-//	D3D11_BLEND_DESC bd;
-//	SecureZeroMemory(&bd, sizeof(bd));
-//#if defined(MSAA)
-//	bd.AlphaToCoverageEnable = true;		/*!< MSAAで描画ターゲットにおいてピクセル値を設定するときα値を使う */
-//#else
-//	bd.AlphaToCoverageEnable = false;
-//#endif
-//	bd.IndependentBlendEnable					= false;						/*!< false:RenderTarget[0]の設定のみ反映。[1]～[7]は無視 */
-//	bd.RenderTarget[0].BlendEnable				= true;							/*!< ブレンディングを有効 */
-//	bd.RenderTarget[0].SrcBlend					= D3D11_BLEND_SRC_ALPHA;		/*!< ソースのRGBを選択 */
-//	bd.RenderTarget[0].DestBlend				= D3D11_BLEND_INV_SRC_ALPHA;	/*!< ディスティネーションのRGB選択 */
-//	bd.RenderTarget[0].BlendOp					= D3D11_BLEND_OP_ADD;			/*!< RGBのブレンド設定 */
-//	bd.RenderTarget[0].SrcBlendAlpha			= D3D11_BLEND_ONE;				/*!< ソースのα値を選択 */
-//	bd.RenderTarget[0].DestBlendAlpha			= D3D11_BLEND_ZERO;				/*!< ディスティネーションのα値を選択 */
-//	bd.RenderTarget[0].BlendOpAlpha				= D3D11_BLEND_OP_ADD;			/*!< α値のブレンド設定 */
-//	bd.RenderTarget[0].RenderTargetWriteMask	= D3D11_COLOR_WRITE_ENABLE_ALL;	/*!< RGBAのうち書き込む値を指定する */
-//
-//	/*! ブレンドステート作成 */
-//	hr = m_pDevice->CreateBlendState(
-//		&bd,			/*!< ブレンドステート設定 */
-//		&m_pBlendState	/*!< 設定を受け取る変数 */
-//	);
-//	if (FAILED(hr)) { 
-//		ErrorLog("BlendState is not create!");
-//		return false;
-//	}/*!< ブレンドステート作成失敗 */
-//	
-//	/*! ブレンドステート設定用変数 */
-//	float blendFactor[4]{ 0.0f,0.0f, 0.0f, 0.0f };
-//	UINT mask=0xffffffff;
-//
-//	/*! OMにブレンドステートオブジェクト設定 */
-//	m_pDeviceContext->OMSetBlendState(
-//		m_pBlendState,		/*!< 設定するオブジェクト */
-//		blendFactor,		/*!< 定数値 */
-//		mask				/*!< サンプル用マスク */
-//	);
-//
 	/*! 初期化終了 */
 	return S_OK;
 }
@@ -398,7 +365,7 @@ void Direct3D11::Clear()
 	/*! デプス・ステンシルビューのクリア */
 	m_pDeviceContext->ClearDepthStencilView(
 		m_pDepthStencilView.Get(),	/*!< クリアするデプス・ステンシルビュー */
-		D3D11_CLEAR_DEPTH,			/*!< クリアするデータの型 */
+		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,			/*!< クリアするデータの型 */
 		1.0f,						/*!< 深度バッファのクリア値 */
 		0							/*!< ステンシルバッファのクリア値 */
 	);
